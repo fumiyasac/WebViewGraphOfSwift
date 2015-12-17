@@ -23,6 +23,7 @@
 		DEDAF2E41C22892600A3FFB6 /* CalorieDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2E21C22892600A3FFB6 /* CalorieDataCell.swift */; };
 		DEDAF2E51C22892600A3FFB6 /* CalorieDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DEDAF2E31C22892600A3FFB6 /* CalorieDataCell.xib */; };
 		DEDAF2E71C22AA4500A3FFB6 /* Calorie.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2E61C22AA4500A3FFB6 /* Calorie.swift */; };
+		DEDAF2EB1C22FF1400A3FFB6 /* TextFieldIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2EA1C22FF1400A3FFB6 /* TextFieldIdentifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		DEDAF2E21C22892600A3FFB6 /* CalorieDataCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalorieDataCell.swift; sourceTree = "<group>"; };
 		DEDAF2E31C22892600A3FFB6 /* CalorieDataCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalorieDataCell.xib; sourceTree = "<group>"; };
 		DEDAF2E61C22AA4500A3FFB6 /* Calorie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Calorie.swift; sourceTree = "<group>"; };
+		DEDAF2EA1C22FF1400A3FFB6 /* TextFieldIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldIdentifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +168,7 @@
 			children = (
 				DEDAF2D71C22832100A3FFB6 /* GraphColorPattern.swift */,
 				DEDAF2D91C22849E00A3FFB6 /* GraphStatus.swift */,
+				DEDAF2EA1C22FF1400A3FFB6 /* TextFieldIdentifier.swift */,
 			);
 			name = Constants;
 			sourceTree = "<group>";
@@ -395,6 +398,7 @@
 				DEDAF2DF1C22863800A3FFB6 /* ColorDefinition.swift in Sources */,
 				DE702B941C1F20BE001C842D /* ViewController.swift in Sources */,
 				DEDAF2E71C22AA4500A3FFB6 /* Calorie.swift in Sources */,
+				DEDAF2EB1C22FF1400A3FFB6 /* TextFieldIdentifier.swift in Sources */,
 				DE702B921C1F20BE001C842D /* AppDelegate.swift in Sources */,
 				DEDAF2DA1C22849E00A3FFB6 /* GraphStatus.swift in Sources */,
 			);

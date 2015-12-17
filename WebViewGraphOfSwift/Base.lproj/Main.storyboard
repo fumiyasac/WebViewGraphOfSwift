@@ -18,7 +18,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <webView clearsContextBeforeDrawing="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="fSs-uH-vXY">
+                            <webView clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="fSs-uH-vXY">
                                 <rect key="frame" x="20" y="46" width="560" height="230"/>
                                 <color key="backgroundColor" red="0.36078431372549019" green="0.38823529411764707" blue="0.40392156862745099" alpha="1" colorSpace="deviceRGB"/>
                                 <constraints>
@@ -257,10 +257,43 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rwv-eZ-IeX">
+                                <rect key="frame" x="0.0" y="330" width="600" height="270"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="270" id="qSb-FH-sHS"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bl0-bf-wXN">
+                                <rect key="frame" x="500" y="343" width="80" height="30"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="lJG-4P-dVi"/>
+                                    <constraint firstAttribute="width" constant="80" id="y5j-DL-JAi"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                                <state key="normal" title="日付を入力">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="inputDatepickerAction:" destination="123-ba-w4m" eventType="touchUpInside" id="F72-s6-ate"/>
+                                </connections>
+                            </button>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="kVP-m2-Mqt">
+                                <rect key="frame" x="0.0" y="384" width="600" height="216"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="216" id="Wty-Ju-9MD"/>
+                                </constraints>
+                                <date key="date" timeIntervalSinceReferenceDate="472052548.04505002">
+                                    <!--2015-12-17 13:42:28 +0000-->
+                                </date>
+                                <locale key="locale" localeIdentifier="ja_JP"/>
+                            </datePicker>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ags-D9-d5c" firstAttribute="top" secondItem="ceo-tW-Y8s" secondAttribute="bottom" constant="2" id="3CQ-hu-Sa3"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Rwv-eZ-IeX" secondAttribute="trailing" constant="-20" id="3Ib-i8-C5J"/>
                             <constraint firstItem="loD-Fd-p69" firstAttribute="leading" secondItem="aQ9-pH-nGw" secondAttribute="leadingMargin" id="3nq-Aa-hv5"/>
                             <constraint firstItem="sQn-Qn-fBn" firstAttribute="top" secondItem="RlW-lc-uFH" secondAttribute="bottom" id="4db-uL-gnD"/>
                             <constraint firstItem="sQn-Qn-fBn" firstAttribute="leading" secondItem="sqp-8p-38x" secondAttribute="trailing" constant="10" id="5M0-Ck-EDu"/>
@@ -275,6 +308,7 @@
                             <constraint firstItem="Aui-Fd-8hu" firstAttribute="top" secondItem="ttm-eN-M5t" secondAttribute="bottom" constant="20" id="Ebb-9w-Kff"/>
                             <constraint firstItem="TNf-rK-eaL" firstAttribute="top" secondItem="HMH-zE-F7d" secondAttribute="bottom" constant="30" id="GA7-mh-wIj"/>
                             <constraint firstItem="sqp-8p-38x" firstAttribute="top" secondItem="RlW-lc-uFH" secondAttribute="bottom" id="GCE-Xi-bNy"/>
+                            <constraint firstItem="Rwv-eZ-IeX" firstAttribute="leading" secondItem="aQ9-pH-nGw" secondAttribute="leadingMargin" constant="-20" id="HSF-Fg-O3z"/>
                             <constraint firstItem="0XP-RS-e9N" firstAttribute="top" secondItem="58y-f3-14s" secondAttribute="bottom" id="MXK-Ri-t15"/>
                             <constraint firstItem="sqp-8p-38x" firstAttribute="leading" secondItem="aQ9-pH-nGw" secondAttribute="leadingMargin" id="Mwe-Os-jFW"/>
                             <constraint firstItem="ttm-eN-M5t" firstAttribute="trailing" secondItem="aQ9-pH-nGw" secondAttribute="trailingMargin" id="OYT-TS-LtM"/>
@@ -286,8 +320,12 @@
                             <constraint firstItem="ceo-tW-Y8s" firstAttribute="trailing" secondItem="aQ9-pH-nGw" secondAttribute="trailingMargin" id="RdU-L6-FBe"/>
                             <constraint firstItem="RlW-lc-uFH" firstAttribute="top" secondItem="HMH-zE-F7d" secondAttribute="bottom" id="X8G-3d-W71"/>
                             <constraint firstItem="HMH-zE-F7d" firstAttribute="top" secondItem="zSh-wk-kwt" secondAttribute="bottom" id="Y5n-R7-ef8"/>
+                            <constraint firstItem="kVP-m2-Mqt" firstAttribute="top" secondItem="bl0-bf-wXN" secondAttribute="bottom" constant="11" id="Zgu-ad-V6b"/>
+                            <constraint firstItem="kVP-m2-Mqt" firstAttribute="leading" secondItem="aQ9-pH-nGw" secondAttribute="leadingMargin" constant="-20" id="bNm-jZ-bdm"/>
                             <constraint firstItem="ttm-eN-M5t" firstAttribute="leading" secondItem="aQ9-pH-nGw" secondAttribute="leadingMargin" id="br3-7b-K5N"/>
                             <constraint firstItem="loD-Fd-p69" firstAttribute="top" secondItem="ags-D9-d5c" secondAttribute="bottom" id="emK-v9-taD"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="kVP-m2-Mqt" secondAttribute="trailing" constant="-20" id="fFo-ww-ZvG"/>
+                            <constraint firstItem="Aui-Fd-8hu" firstAttribute="top" secondItem="Rwv-eZ-IeX" secondAttribute="bottom" id="gi7-Ph-dkB"/>
                             <constraint firstItem="loD-Fd-p69" firstAttribute="top" secondItem="ags-D9-d5c" secondAttribute="bottom" id="ifH-bO-g6I"/>
                             <constraint firstItem="58y-f3-14s" firstAttribute="leading" secondItem="aQ9-pH-nGw" secondAttribute="leadingMargin" id="ihA-0N-qhJ"/>
                             <constraint firstItem="zSh-wk-kwt" firstAttribute="top" secondItem="0XP-RS-e9N" secondAttribute="bottom" id="ljm-aG-ghL"/>
@@ -295,9 +333,11 @@
                             <constraint firstItem="0XP-RS-e9N" firstAttribute="leading" secondItem="aQ9-pH-nGw" secondAttribute="leadingMargin" id="rJB-x0-RQ3"/>
                             <constraint firstItem="RlW-lc-uFH" firstAttribute="top" secondItem="HMH-zE-F7d" secondAttribute="bottom" id="rJP-dj-itr"/>
                             <constraint firstItem="TNf-rK-eaL" firstAttribute="trailing" secondItem="aQ9-pH-nGw" secondAttribute="trailingMargin" id="sgl-EQ-qKB"/>
+                            <constraint firstItem="Aui-Fd-8hu" firstAttribute="top" secondItem="kVP-m2-Mqt" secondAttribute="bottom" id="t20-2U-3iK"/>
                             <constraint firstItem="ags-D9-d5c" firstAttribute="leading" secondItem="aQ9-pH-nGw" secondAttribute="leadingMargin" id="tlo-dh-IL8"/>
                             <constraint firstItem="Gxm-P5-0fH" firstAttribute="trailing" secondItem="aQ9-pH-nGw" secondAttribute="trailingMargin" id="wYZ-4Y-oaI"/>
                             <constraint firstItem="0XP-RS-e9N" firstAttribute="top" secondItem="58y-f3-14s" secondAttribute="bottom" id="x8A-T1-H1c"/>
+                            <constraint firstItem="bl0-bf-wXN" firstAttribute="trailing" secondItem="aQ9-pH-nGw" secondAttribute="trailingMargin" id="xzt-Fz-2jt"/>
                             <constraint firstItem="zSh-wk-kwt" firstAttribute="leading" secondItem="aQ9-pH-nGw" secondAttribute="leadingMargin" id="zOm-ey-yOv"/>
                             <constraint firstItem="HMH-zE-F7d" firstAttribute="top" secondItem="zSh-wk-kwt" secondAttribute="bottom" id="zrJ-yb-XHn"/>
                         </constraints>
@@ -307,9 +347,13 @@
                     </view>
                     <connections>
                         <outlet property="calorieAmountField" destination="0XP-RS-e9N" id="q2E-OU-qyX"/>
+                        <outlet property="datepickerArea" destination="kVP-m2-Mqt" id="8iY-Jt-Lri"/>
+                        <outlet property="datepickerBackground" destination="Rwv-eZ-IeX" id="hKT-Re-Dag"/>
+                        <outlet property="datepickerButton" destination="bl0-bf-wXN" id="7lo-sg-VKi"/>
                         <outlet property="eatDateField" destination="HMH-zE-F7d" id="c8M-Kr-6F6"/>
                         <outlet property="foodNameField" destination="loD-Fd-p69" id="d0g-KL-P2Q"/>
                         <outlet property="foodPicture" destination="sqp-8p-38x" id="1C7-VW-d0Q"/>
+                        <outlet property="foodPictureBtn" destination="TNf-rK-eaL" id="Xxm-4a-zSb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3d7-Vy-Gxy" userLabel="First Responder" sceneMemberID="firstResponder"/>

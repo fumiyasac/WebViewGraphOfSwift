@@ -25,7 +25,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //グラフの状態
     var selectedGraph: GraphStatus!
-    
+        
     //画面に配置された部品
     @IBOutlet var grachWebView: UIWebView!
     @IBOutlet var selectGraphSegment: UISegmentedControl!

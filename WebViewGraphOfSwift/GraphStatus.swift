@@ -18,7 +18,7 @@ enum GraphStatus {
         return 0
     }
     
-    //状態対応する値を返す
+    //状態に対応する値を返す
     func returnValue() -> Int {
         switch (self) {
         case .BarGraph:
