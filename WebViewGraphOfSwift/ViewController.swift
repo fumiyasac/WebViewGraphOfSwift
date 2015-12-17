@@ -9,7 +9,7 @@
 import UIKit
 
 //RealmSwiftのインポート
-//import RealmSwift
+import RealmSwift
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIWebViewDelegate {
 

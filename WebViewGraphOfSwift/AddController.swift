@@ -8,6 +8,9 @@
 
 import UIKit
 
+//Realmクラスのインポート
+import RealmSwift
+
 class AddController: UIViewController,UITextFieldDelegate {
 
     //メンバ変数
@@ -120,18 +123,12 @@ class AddController: UIViewController,UITextFieldDelegate {
         //デイトピッカーを隠す
         self.hideDatePicker()
         
-        //Debug.
-        print(datepickerArea.date)
-        
         //YYYY/MM/DDの状態に整形してテキストフィールドへ表示
         let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
         dateFormatter.dateFormat = "yyyy/MM/dd"
         let dateString: String = dateFormatter.stringFromDate(self.datepickerArea.date)
         self.eatDateField.text = dateString
-        
-        //Debug.
-        print(dateString)
         
         //ハイライトやボタン状態を元に戻す
         self.resetTextFieldStatus()
