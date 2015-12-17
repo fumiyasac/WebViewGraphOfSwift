@@ -8,28 +8,57 @@
 
 import UIKit
 
-class AddController: UIViewController {
+class AddController: UIViewController,UITextFieldDelegate {
 
+    //メンバ変数
+    var foodName: String = ""
+    var calorieAmount: String = ""
+    var eatDate: String = ""
+    
+    //画面に配置された部品
+    @IBOutlet var foodNameField: UITextField!
+    @IBOutlet var calorieAmountField: UITextField!
+    @IBOutlet var eatDateField: UITextField!
+    @IBOutlet var foodPicture: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        //UITextFieldのプレースホルダーを設定
+        self.foodNameField.placeholder = "例）てんぷらそば"
+        self.calorieAmountField.placeholder = "例）730"
+        self.eatDateField.placeholder = "例）20151222"
+        
+        //UITextFieldのその他設定
+        self.calorieAmountField.keyboardType = UIKeyboardType.NumberPad
+        
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    //背景をタップしてキーボードを引っ込めるアクション
+    @IBAction func hideKeyboardAction(sender: UITapGestureRecognizer) {
+        self.view.endEditing(true)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    //カメラ・フォトライブラリを起動するアクション
+    @IBAction func activateCameraAction(sender: UIButton) {
+        
+        //@todo:UIActionSheetを起動して選択させて、カメラ・フォトライブラリを起動
     }
-    */
-
+    
+    //前の画面に戻るアクション
+    @IBAction func backViewControllerAction(sender: UIButton) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    //カロリーデータを記録するアクション
+    @IBAction func saveCalorieDataAction(sender: UIButton) {
+        
+        //@todo:バリデーションを通して、OK:データを1件Realmにセーブする / Error:UIAlertControllerでエラーメッセージ表示、
+    }
+    
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
 }
