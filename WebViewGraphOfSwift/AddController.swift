@@ -58,7 +58,6 @@ class AddController: UIViewController,UITextFieldDelegate {
         self.datepickerButton.enabled = true
         self.datepickerArea.alpha = 1
         self.datepickerArea.enabled = true
-        self.foodPictureBtn.enabled = false
     }
     
     //デイトピッカーを非表示にする
@@ -68,11 +67,13 @@ class AddController: UIViewController,UITextFieldDelegate {
         self.datepickerButton.enabled = false
         self.datepickerArea.alpha = 0
         self.datepickerArea.enabled = false
-        self.foodPictureBtn.enabled = true
     }
     
     //※ボタンアクションだとキーボードが重なってしまうのでUITextFieldDelegateを使う
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+
+        //カメラボタンを無効にする
+        self.foodPictureBtn.enabled = false
         
         //「食べた日にち」のテキストフィールドタップ時のアクションのテキストフィールドがタップされた際はデイトピッカーを表示する
         if textField.tag == TextFieldIdentifier.InputDate.returnValue() {
