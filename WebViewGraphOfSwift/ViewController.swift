@@ -20,8 +20,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let cellHeight: CGFloat = 60.0
     
     //テーブルビューのセル数
-    //var cellCount: Int!
-    let cellCount: Int! = 10
+    var cellCount: Int!
+    
+    //テーブルデータ表示用に一時的にすべてのfetchデータを格納する
+    var caloriesArray: NSMutableArray = []
     
     //グラフの状態
     var selectedGraph: GraphStatus!
@@ -30,6 +32,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet var grachWebView: UIWebView!
     @IBOutlet var selectGraphSegment: UISegmentedControl!
     @IBOutlet var recordTableView: UITableView!
+    
+    override func viewWillAppear(animated: Bool) {
+        self.fetchAndReloadData()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,6 +66,30 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
+    //各データのfetchとテーブルビューのリロードを行う
+    func fetchAndReloadData() {
+        
+        //カロリーデータをフェッチする
+        self.caloriesArray.removeAllObjects()
+        let calories = Calorie.fetchAllCalorieList()
+        
+        //セル数の設定
+        self.cellCount = calories.count
+        
+        //TableViewへの一覧表示用のデータを作成
+        if self.cellCount != 0 {
+            for calorie in calories {
+                self.caloriesArray.addObject(calorie)
+            }
+        }
+        
+        //Debug.
+        //print(self.caloriesArray)
+        
+        //テーブルビューをリロード
+        self.reloadData()
+    }
+    
     //TableView: テーブルの要素数を設定する
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return self.sectionCount
@@ -78,11 +108,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let cell = tableView.dequeueReusableCellWithIdentifier("CalorieDataCell") as? CalorieDataCell
         
         //テキスト・画像等の表示
-        //@test: ダミーデータ
-        cell!.calorieTitle.text = "リブステーキ（ライス大盛り・サラダ付）"
-        cell!.calorieDate.text = "2015/12/22"
-        cell!.calorieValue.text = "1247kcal"
+        let calorieData: Calorie = self.caloriesArray[indexPath.row] as! Calorie
         
+        cell!.calorieTitle.text = calorieData.food
+        cell!.calorieValue.text = String(calorieData.amount) + "kcal"
+        
+        //NSDate型は文字列に変換
+        let eatDateString: String = ChangeNSDateOrString.convertNSDateToString(calorieData.eatDate)
+        cell!.calorieDate.text = eatDateString
+        
+        //画像を表示させる
+        cell!.calorieImage.image = calorieData.image
+
         //セルのアクセサリタイプと背景の設定
         cell!.accessoryType = UITableViewCellAccessoryType.None
         cell!.selectionStyle = UITableViewCellSelectionStyle.None

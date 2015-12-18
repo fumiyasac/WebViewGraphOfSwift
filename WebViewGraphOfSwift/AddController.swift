@@ -11,12 +11,14 @@ import UIKit
 //Realmクラスのインポート
 import RealmSwift
 
-class AddController: UIViewController,UITextFieldDelegate {
+class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     //メンバ変数
-    var foodName: String = ""
-    var calorieAmount: Int = 0
-    var eatDate: String = ""
+    var foodName: String!
+    var calorieAmount: String!
+    var eatDate: String!
+    
+    var selectedImage: UIImage!
     
     //画面に配置された部品（入力用の要素）
     @IBOutlet var foodNameField: UITextField!
@@ -33,10 +35,15 @@ class AddController: UIViewController,UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //画像の描画モードの指定
+        self.foodPicture.contentMode = UIViewContentMode.ScaleToFill
+        self.selectedImage = UIImage(named: "noimage.png")
+        self.foodPicture.image = self.selectedImage
+        
         //UITextFieldのプレースホルダーを設定
-        self.foodNameField.placeholder = "例）てんぷらそば"
-        self.calorieAmountField.placeholder = "例）730"
-        self.eatDateField.placeholder = "例）2015/12/22"
+        self.foodNameField.placeholder = "(例）てんぷらそば"
+        self.calorieAmountField.placeholder = "(例）730"
+        self.eatDateField.placeholder = "(例）2015/12/22"
         
         //UITextFieldを識別するためのタグ
         self.foodNameField.tag = TextFieldIdentifier.InputFood.returnValue()
@@ -125,10 +132,7 @@ class AddController: UIViewController,UITextFieldDelegate {
         self.hideDatePicker()
         
         //YYYY/MM/DDの状態に整形してテキストフィールドへ表示
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
-        dateFormatter.dateFormat = "yyyy/MM/dd"
-        let dateString: String = dateFormatter.stringFromDate(self.datepickerArea.date)
+        let dateString: String = ChangeNSDateOrString.convertNSDateToString(self.datepickerArea.date)
         self.eatDateField.text = dateString
         
         //ハイライトやボタン状態を元に戻す
@@ -149,7 +153,93 @@ class AddController: UIViewController,UITextFieldDelegate {
     //カメラ・フォトライブラリを起動するアクション
     @IBAction func activateCameraAction(sender: UIButton) {
         
-        //@todo:UIActionSheetを起動して選択させて、カメラ・フォトライブラリを起動
+        //UIActionSheetを起動して選択させて、カメラ・フォトライブラリを起動
+        let alertActionSheet = UIAlertController(
+            title: "「食べたもの」の写真を記録する",
+            message: "写真と一緒にカロリーを記録しましょう(^^)",
+            preferredStyle: UIAlertControllerStyle.ActionSheet
+        )
+        
+        //UIActionSheetの戻り値をチェック
+        alertActionSheet.addAction(
+            UIAlertAction(
+                title: "ライブラリから選択",
+                style: UIAlertActionStyle.Default,
+                handler: handlerActionSheet
+            )
+        )
+        alertActionSheet.addAction(
+            UIAlertAction(
+                title: "カメラで撮影",
+                style: UIAlertActionStyle.Default,
+                handler: handlerActionSheet
+            )
+        )
+        alertActionSheet.addAction(
+            UIAlertAction(
+                title: "キャンセル",
+                style: UIAlertActionStyle.Cancel,
+                handler: handlerActionSheet
+            )
+        )
+        presentViewController(alertActionSheet, animated: true, completion: nil)
+    }
+    
+    //アクションシートの結果に応じて処理を変更
+    func handlerActionSheet(ac: UIAlertAction) -> Void {
+        
+        switch ac.title! {
+
+            case "ライブラリから選択":
+                self.selectAndDisplayFromPhotoLibrary()
+                break
+            case "カメラで撮影":
+                self.loadAndDisplayFromCamera()
+                break
+            case "キャンセル":
+                break
+            default:
+                break
+        }
+        
+    }
+    
+    //ライブラリから写真を選択してimageに書き出す
+    func selectAndDisplayFromPhotoLibrary() {
+        
+        //フォトアルバムを表示
+        let ipc = UIImagePickerController()
+        ipc.delegate = self
+        ipc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        presentViewController(ipc, animated: true, completion: nil)
+    }
+
+    //カメラで撮影してimageに書き出す
+    func loadAndDisplayFromCamera() {
+        
+        //カメラを起動
+        let ip = UIImagePickerController()
+        ip.delegate = self
+        ip.sourceType = UIImagePickerControllerSourceType.Camera
+        presentViewController(ip, animated: true, completion: nil)
+    }
+    
+    //画像を選択した時のイベント
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+        
+        //画像をセットして戻る
+        self.dismissViewControllerAnimated(true, completion: nil)
+        
+        //リサイズして表示する
+        let resizedImage = CGRectMake(
+            image.size.width / 4.0,
+            image.size.height / 4.0,
+            image.size.width / 2.0,
+            image.size.height / 2.0
+        )
+        let cgImage = CGImageCreateWithImageInRect(image.CGImage, resizedImage)
+        self.foodPicture.image = UIImage(CGImage: cgImage!)
+        //self.foodPicture.image = image
     }
     
     //前の画面に戻るアクション
@@ -160,9 +250,83 @@ class AddController: UIViewController,UITextFieldDelegate {
     //カロリーデータを記録するアクション
     @IBAction func saveCalorieDataAction(sender: UIButton) {
         
-        //@todo:バリデーションを通して、OK:データを1件Realmにセーブする / Error:UIAlertControllerでエラーメッセージ表示、
+        //UIImageデータを取得する
+        self.selectedImage = self.foodPicture.image
+        
+        //バリデーションを通す前の準備
+        self.foodName = self.foodNameField.text
+        self.calorieAmount = self.calorieAmountField.text
+        self.eatDate = self.eatDateField.text
+        
+        //Error:UIAlertControllerでエラーメッセージ表示
+        if (self.foodName.isEmpty || self.calorieAmount.isEmpty || self.eatDate.isEmpty) {
+            
+            //エラーのアラートを表示してOKを押すと戻る
+            let errorAlert = UIAlertController(
+                title: "エラー",
+                message: "入力必須の項目に不備があります。",
+                preferredStyle: UIAlertControllerStyle.Alert
+            )
+            errorAlert.addAction(
+                UIAlertAction(
+                    title: "OK",
+                    style: UIAlertActionStyle.Default,
+                    handler: nil
+                )
+            )
+            presentViewController(errorAlert, animated: true, completion: nil)
+        
+        //OK:データを1件Realmにセーブする
+        } else {
+            
+            //Realmにデータを1件登録する
+            let calorieObject = Calorie.create()
+            calorieObject.food = self.foodName
+            calorieObject.image = self.selectedImage
+            calorieObject.amount = Int(self.calorieAmount)!
+            
+            //String（yyyy/MM/dd）をNSDate型に変換
+            let calorieDate: NSDate = ChangeNSDateOrString.convertStringToNSDate(self.eatDate)
+            calorieObject.eatDate = calorieDate
+            
+            //Debug.
+            //print(self.foodName)
+            //print(self.selectedImage)
+            //print(Int(self.calorieAmount)!)
+            //print(calorieDate)
+            
+            //登録処理
+            calorieObject.save()
+            
+            //全ボタン非活性
+            self.foodNameField.enabled = false
+            self.calorieAmountField.enabled = false
+            self.eatDateField.enabled = false
+            self.foodPictureBtn.enabled = false
+            
+            //登録されたアラートを表示してOKを押すと戻る
+            let errorAlert = UIAlertController(
+                title: "完了",
+                message: "入力データが登録されました。",
+                preferredStyle: UIAlertControllerStyle.Alert
+            )
+            errorAlert.addAction(
+                UIAlertAction(
+                    title: "OK",
+                    style: UIAlertActionStyle.Default,
+                    handler: saveComplete
+                )
+            )
+            presentViewController(errorAlert, animated: true, completion: nil)
+        }
+        
     }
     
+    //登録が完了した際のアクション
+    func saveComplete(ac: UIAlertAction) -> Void {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

@@ -19,11 +19,12 @@
 		DEDAF2D81C22832100A3FFB6 /* GraphColorPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2D71C22832100A3FFB6 /* GraphColorPattern.swift */; };
 		DEDAF2DA1C22849E00A3FFB6 /* GraphStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2D91C22849E00A3FFB6 /* GraphStatus.swift */; };
 		DEDAF2DF1C22863800A3FFB6 /* ColorDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2DE1C22863800A3FFB6 /* ColorDefinition.swift */; };
-		DEDAF2E11C2286A900A3FFB6 /* FormValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2E01C2286A900A3FFB6 /* FormValidator.swift */; };
 		DEDAF2E41C22892600A3FFB6 /* CalorieDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2E21C22892600A3FFB6 /* CalorieDataCell.swift */; };
 		DEDAF2E51C22892600A3FFB6 /* CalorieDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DEDAF2E31C22892600A3FFB6 /* CalorieDataCell.xib */; };
 		DEDAF2E71C22AA4500A3FFB6 /* Calorie.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2E61C22AA4500A3FFB6 /* Calorie.swift */; };
 		DEDAF2EB1C22FF1400A3FFB6 /* TextFieldIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2EA1C22FF1400A3FFB6 /* TextFieldIdentifier.swift */; };
+		DEDAF2ED1C23DF9100A3FFB6 /* noimage.png in Resources */ = {isa = PBXBuildFile; fileRef = DEDAF2EC1C23DF9100A3FFB6 /* noimage.png */; };
+		DEDAF2F01C24154E00A3FFB6 /* ChangeNSDateOrString.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2EF1C24154D00A3FFB6 /* ChangeNSDateOrString.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,11 +65,12 @@
 		DEDAF2D71C22832100A3FFB6 /* GraphColorPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphColorPattern.swift; sourceTree = "<group>"; };
 		DEDAF2D91C22849E00A3FFB6 /* GraphStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphStatus.swift; sourceTree = "<group>"; };
 		DEDAF2DE1C22863800A3FFB6 /* ColorDefinition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorDefinition.swift; sourceTree = "<group>"; };
-		DEDAF2E01C2286A900A3FFB6 /* FormValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormValidator.swift; sourceTree = "<group>"; };
 		DEDAF2E21C22892600A3FFB6 /* CalorieDataCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalorieDataCell.swift; sourceTree = "<group>"; };
 		DEDAF2E31C22892600A3FFB6 /* CalorieDataCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalorieDataCell.xib; sourceTree = "<group>"; };
 		DEDAF2E61C22AA4500A3FFB6 /* Calorie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Calorie.swift; sourceTree = "<group>"; };
 		DEDAF2EA1C22FF1400A3FFB6 /* TextFieldIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldIdentifier.swift; sourceTree = "<group>"; };
+		DEDAF2EC1C23DF9100A3FFB6 /* noimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimage.png; sourceTree = "<group>"; };
+		DEDAF2EF1C24154D00A3FFB6 /* ChangeNSDateOrString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeNSDateOrString.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 		DE702B901C1F20BD001C842D /* WebViewGraphOfSwift */ = {
 			isa = PBXGroup;
 			children = (
+				DEDAF2EE1C23F86E00A3FFB6 /* Assets */,
 				DEDAF2DD1C22860200A3FFB6 /* Components */,
 				DEDAF2DC1C2285F300A3FFB6 /* Libraries */,
 				DEDAF2DB1C2285E800A3FFB6 /* Models */,
@@ -185,7 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				DEDAF2DE1C22863800A3FFB6 /* ColorDefinition.swift */,
-				DEDAF2E01C2286A900A3FFB6 /* FormValidator.swift */,
+				DEDAF2EF1C24154D00A3FFB6 /* ChangeNSDateOrString.swift */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -197,6 +200,14 @@
 				DEDAF2E31C22892600A3FFB6 /* CalorieDataCell.xib */,
 			);
 			name = Components;
+			sourceTree = "<group>";
+		};
+		DEDAF2EE1C23F86E00A3FFB6 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				DEDAF2EC1C23DF9100A3FFB6 /* noimage.png */,
+			);
+			name = Assets;
 			sourceTree = "<group>";
 		};
 		E4AE566E493235C547776653 /* Pods */ = {
@@ -315,6 +326,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DEDAF2ED1C23DF9100A3FFB6 /* noimage.png in Resources */,
 				DE702B9C1C1F20BE001C842D /* LaunchScreen.storyboard in Resources */,
 				DEDAF2E51C22892600A3FFB6 /* CalorieDataCell.xib in Resources */,
 				DE702B991C1F20BE001C842D /* Assets.xcassets in Resources */,
@@ -391,7 +403,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEDAF2E11C2286A900A3FFB6 /* FormValidator.swift in Sources */,
 				DEDAF2E41C22892600A3FFB6 /* CalorieDataCell.swift in Sources */,
 				DEDAF2B21C21C90F00A3FFB6 /* AddController.swift in Sources */,
 				DEDAF2D81C22832100A3FFB6 /* GraphColorPattern.swift in Sources */,
@@ -400,6 +411,7 @@
 				DEDAF2E71C22AA4500A3FFB6 /* Calorie.swift in Sources */,
 				DEDAF2EB1C22FF1400A3FFB6 /* TextFieldIdentifier.swift in Sources */,
 				DE702B921C1F20BE001C842D /* AppDelegate.swift in Sources */,
+				DEDAF2F01C24154E00A3FFB6 /* ChangeNSDateOrString.swift in Sources */,
 				DEDAF2DA1C22849E00A3FFB6 /* GraphStatus.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

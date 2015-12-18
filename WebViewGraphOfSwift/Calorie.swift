@@ -78,14 +78,14 @@ class Calorie: Object {
     //新規追加用のインスタンス生成メソッド
     static func create() -> Calorie {
         let calorie = Calorie()
-        calorie.id = getLastId()
+        calorie.id = self.getLastId()
         return calorie
     }
     
     //プライマリキーの作成メソッド
     static func getLastId() -> Int {
-        if let user = realm.objects(Calorie).last {
-            return user.id + 1
+        if let calorie = realm.objects(Calorie).last {
+            return calorie.id + 1
         } else {
             return 1
         }
@@ -100,7 +100,7 @@ class Calorie: Object {
     
     //登録データの全件取得をする
     static func fetchAllCalorieList() -> [Calorie] {
-        let calories = realm.objects(Calorie).sorted("id", ascending: false)
+        let calories = realm.objects(Calorie).sorted("amount", ascending: false)
         var calorieList: [Calorie] = []
         for calorie in calories {
             calorieList.append(calorie)
