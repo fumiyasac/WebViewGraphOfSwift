@@ -289,12 +289,6 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
             let calorieDate: NSDate = ChangeNSDateOrString.convertStringToNSDate(self.eatDate)
             calorieObject.eatDate = calorieDate
             
-            //Debug.
-            //print(self.foodName)
-            //print(self.selectedImage)
-            //print(Int(self.calorieAmount)!)
-            //print(calorieDate)
-            
             //登録処理
             calorieObject.save()
             

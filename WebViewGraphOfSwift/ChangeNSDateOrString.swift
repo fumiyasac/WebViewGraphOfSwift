@@ -8,6 +8,7 @@
 
 import UIKit
 
+//日付をNSDateまたはStringの相互変換用のstruct
 struct ChangeNSDateOrString {
     
     //NSDate → Stringへの変換

@@ -6,6 +6,7 @@
 //  Copyright © 2015年 just1factory. All rights reserved.
 //
 
+//テキストフィールドのパターンを定義したenum
 enum TextFieldIdentifier {
     
     //テキストフィールドの名称

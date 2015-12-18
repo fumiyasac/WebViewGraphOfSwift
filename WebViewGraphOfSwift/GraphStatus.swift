@@ -6,7 +6,7 @@
 //  Copyright © 2015年 just1factory. All rights reserved.
 //
 
-//グラフのパターン
+//グラフのパターンを定義したenum
 enum GraphStatus {
     
     case BarGraph

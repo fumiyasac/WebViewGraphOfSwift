@@ -16,7 +16,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //テーブルビューの要素数
     let sectionCount: Int = 1
     
-    //テーブルビューセルの高さ(Xibのサイズに合わせるのが理想)
+    //テーブルビューセルの高さ(高さ固定の場合Xibのサイズに合わせるのが理想)
     let cellHeight: CGFloat = 60.0
     
     //テーブルビューのセル数
@@ -67,6 +67,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func fetchAndReloadData() {
         
         //カロリーデータをフェッチしてTableViewへの一覧表示用のデータを作成
+        //※折れ線グラフでも使う
         self.caloriesArrayForCell.removeAllObjects()
         let calories = Calorie.fetchAllCalorieListSortByDate()
         
@@ -182,7 +183,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.recordTableView.reloadData()
     }
     
-    //WebViewのロードが完了したら実行される
+    //WebView: ローカルのHTMLファイルのロードが完了したら実行される
     func webViewDidFinishLoad(webView: UIWebView) {
         self.displayGraphBase(self.selectedGraph)
     }
@@ -218,7 +219,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
 
-    //グラフの状態に応じてグラフデータを整形して読み込むアクション
+    //グラフの状態に応じてグラフデータを整形して読み込む
     func displayGraphBase(status: GraphStatus) {
         
         switch (status) {
@@ -280,7 +281,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //TableViewに表示しているデータをそのまま使う
         if self.caloriesArrayForCell.count > 0 {
             
-            //棒グラフ用の文字列を生成する
+            //折れ線グラフ用の文字列を生成する
             var initLineChart: String
             
             if self.caloriesArrayForCell.count == 1 {
