@@ -10,7 +10,6 @@
 enum GraphStatus {
     
     case BarGraph
-    case PieGraph
     case LineGraph
     
     //初期値を返す
@@ -23,10 +22,8 @@ enum GraphStatus {
         switch (self) {
         case .BarGraph:
             return 0
-        case .PieGraph:
-            return 1
         case .LineGraph:
-            return 2
+            return 1
         }
     }
     

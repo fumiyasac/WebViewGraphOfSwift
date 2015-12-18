@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<title>カロリーBest3</title>
+<style>
+    #wrapper{
+        margin: 0 auto;
+    }
+
+    #mycanvas{
+        width: 320px;
+        height: 230px;
+        color: #ffffff;
+    }
+</style>
+</head>
+<body>
+<script src="./Chart.js"></script>
+<script>
+function drawBarChart(expense, sum){
+    barChartData = {
+        labels : [expense[0],expense[1],expense[2]],
+        datasets : [
+            {
+            	label: "ハイカロリーBest3",
+                fillColor : "rgba(220,220,220,0.5)",
+                strokeColor : "rgba(220,220,220,0.8)",
+                highlightFill: "rgba(220,220,220,0.75)",
+                highlightStroke: "rgba(220,220,220,1)",
+                data :[sum[0],sum[1],sum[2]]
+            }
+        ]
+    }
+    
+    //アニメーション処理を記述
+    ctx = document.getElementById("mycanvas").getContext("2d");
+    window.myBar = new Chart(ctx).Bar(barChartData,{responsive : true});
+}
+</script>
+<div id="wrapper">
+<canvas id="mycanvas"></canvas>
+</div>
+</body>
+</html>

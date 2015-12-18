@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+<title>最新3つの折れ線グラフ</title>
+<style>
+    #wrapper{
+        margin: 0 auto;
+    }
+
+    #mycanvas{
+        width: 320px;
+        height: 230px;
+        color: #ffffff;
+    }
+</style>
+</head>
+<body>
+<script src="./Chart.js"></script>
+<script>
+function drawLineChart(expense, sum){
+    lineChartData = {
+        labels : [expense[2],expense[1],expense[0]],
+        datasets : [
+            {
+                label: "最新データ3件",
+            	fillColor: "rgba(151,187,205,0.2)",
+            	strokeColor: "rgba(151,187,205,1)",
+            	pointColor: "rgba(151,187,205,1)",
+            	pointStrokeColor: "#fff",
+            	pointHighlightFill: "#fff",
+            	pointHighlightStroke: "rgba(220,220,220,1)",
+                data :[sum[2],sum[1],sum[0]]
+            }
+        ]
+    }
+    
+    //アニメーション処理を記述
+    ctx = document.getElementById("mycanvas").getContext("2d");
+    window.myLine = new Chart(ctx).Line(lineChartData,{responsive : true});
+}
+</script>
+<div id="wrapper">
+<canvas id="mycanvas"></canvas>
+</div>
+</body>
+</html>

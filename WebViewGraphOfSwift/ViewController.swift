@@ -23,7 +23,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var cellCount: Int!
     
     //テーブルデータ表示用に一時的にすべてのfetchデータを格納する
-    var caloriesArray: NSMutableArray = []
+    var caloriesArrayForCell: NSMutableArray = []
+    
+    //グラフ用の可変配列
+    var caloriesArrayForBarChart: NSMutableArray = []
     
     //グラフの状態
     var selectedGraph: GraphStatus!
@@ -58,36 +61,43 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let nibDefault:UINib = UINib(nibName: "CalorieDataCell", bundle: nil)
         self.recordTableView.registerNib(nibDefault, forCellReuseIdentifier: "CalorieDataCell")
         
-        //グラフの初期状態を設定する
-        self.selectedGraph = GraphStatus.BarGraph
-        
-        //グラフを読み込む
-        self.displayGraphBase(self.selectedGraph)
-        
     }
     
     //各データのfetchとテーブルビューのリロードを行う
     func fetchAndReloadData() {
         
-        //カロリーデータをフェッチする
-        self.caloriesArray.removeAllObjects()
-        let calories = Calorie.fetchAllCalorieList()
+        //カロリーデータをフェッチしてTableViewへの一覧表示用のデータを作成
+        self.caloriesArrayForCell.removeAllObjects()
+        let calories = Calorie.fetchAllCalorieListSortByDate()
         
-        //セル数の設定
         self.cellCount = calories.count
         
-        //TableViewへの一覧表示用のデータを作成
         if self.cellCount != 0 {
             for calorie in calories {
-                self.caloriesArray.addObject(calorie)
+                self.caloriesArrayForCell.addObject(calorie)
             }
         }
         
-        //Debug.
-        //print(self.caloriesArray)
+        //棒グラフ用の可変配列の作成
+        self.caloriesArrayForBarChart.removeAllObjects()
+        let caloriesForBarChart = Calorie.fetchAllCalorieListSortByAmount()
+        if caloriesForBarChart.count != 0 {
+            for calorieForBarChart in caloriesForBarChart {
+                self.caloriesArrayForBarChart.addObject(calorieForBarChart)
+            }
+        }
         
         //テーブルビューをリロード
         self.reloadData()
+        
+        //セグメントコントロール位置の初期設定
+        self.selectGraphSegment.selectedSegmentIndex = 0
+        
+        //グラフの初期状態を設定する
+        self.selectedGraph = GraphStatus.BarGraph
+        
+        //ローカルhtmlを読み込む
+        self.loadLocalHtmlSource(self.selectedGraph)
     }
     
     //TableView: テーブルの要素数を設定する
@@ -97,8 +107,38 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //TableView: テーブルのセクションのセル数を設定する
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //@test: ダミーデータ
         return self.cellCount
+    }
+    
+    //TableView: Editableの状態にする.
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    //TableView: 特定の行のボタン操作を有効にする.
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        print("commitEdittingStyle:\(editingStyle)")
+    }
+    
+    //TableView: Buttonを拡張＆データ削除処理
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        
+        //削除ボタン
+        let myDeleteButton: UITableViewRowAction = UITableViewRowAction(style: .Normal, title: "削除") { (action, index) -> Void in
+            
+            //テーブルビューを編集不可にする
+            tableView.editing = false
+            
+            //データを1件削除
+            let calorieData: Calorie = self.caloriesArrayForCell[indexPath.row] as! Calorie
+            calorieData.delete()
+            
+            //データをリロードする
+            self.fetchAndReloadData()
+            
+        }
+        myDeleteButton.backgroundColor = UIColor.redColor()
+        return [myDeleteButton]
     }
     
     //TableView: 表示するセルの中身を設定する
@@ -108,7 +148,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let cell = tableView.dequeueReusableCellWithIdentifier("CalorieDataCell") as? CalorieDataCell
         
         //テキスト・画像等の表示
-        let calorieData: Calorie = self.caloriesArray[indexPath.row] as! Calorie
+        let calorieData: Calorie = self.caloriesArrayForCell[indexPath.row] as! Calorie
         
         cell!.calorieTitle.text = calorieData.food
         cell!.calorieValue.text = String(calorieData.amount) + "kcal"
@@ -141,6 +181,42 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func reloadData(){
         self.recordTableView.reloadData()
     }
+    
+    //WebViewのロードが完了したら実行される
+    func webViewDidFinishLoad(webView: UIWebView) {
+        self.displayGraphBase(self.selectedGraph)
+    }
+    
+    //ローカルのhtmlファイルを読み込む
+    func loadLocalHtmlSource(status: GraphStatus) {
+        
+        //htmlファイルへアクセスする
+        do {
+            
+            //ローカルアクセス用のパスを格納する変数
+            var path: String = ""
+            
+            //棒グラフ
+            if status == GraphStatus.BarGraph {
+                
+                path = NSBundle.mainBundle().pathForResource("barchart", ofType: "html")!
+                
+            //折れ線グラフ
+            } else if status == GraphStatus.LineGraph {
+                
+                path = NSBundle.mainBundle().pathForResource("linechart", ofType: "html")!
+                
+            }
+            
+            let htmlFile = try String(contentsOfFile: path, encoding: NSUTF8StringEncoding)
+            self.grachWebView.loadHTMLString(htmlFile, baseURL: NSURL(fileURLWithPath: NSBundle.mainBundle().bundlePath))
+            self.grachWebView.scalesPageToFit = false
+            
+        } catch _ as NSError {
+            
+        }
+        
+    }
 
     //グラフの状態に応じてグラフデータを整形して読み込むアクション
     func displayGraphBase(status: GraphStatus) {
@@ -152,11 +228,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 self.displayBarGraphToWebView()
                 break
             
-            //円グラフ
-            case GraphStatus.PieGraph:
-                self.displayPieGraphToWebView()
-                break
-            
             //折れ線グラフ
             case GraphStatus.LineGraph:
                 self.displayLineGraphToWebView()
@@ -165,18 +236,80 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
-    //@todo:棒グラフ用のデータを作成してWebViewへ描画
+    //棒グラフ用のデータを作成してWebViewへ描画（実装汚くてすみません...）
     func displayBarGraphToWebView() {
         
+        if self.caloriesArrayForBarChart.count > 0 {
+            
+            //棒グラフ用の文字列を生成する
+            var initBarChart: String
+            
+            if self.caloriesArrayForBarChart.count == 1 {
+                
+                let first: Calorie = self.caloriesArrayForBarChart[0] as! Calorie
+                
+                initBarChart = NSString(format:"drawBarChart(['%@','%@','%@'],[%@,%@,%@]);", first.food, "なし", "なし", String(first.amount), "0", "0") as String
+                
+            } else if self.caloriesArrayForBarChart.count == 2 {
+
+                let first: Calorie = self.caloriesArrayForBarChart[0] as! Calorie
+                let second: Calorie = self.caloriesArrayForBarChart[1] as! Calorie
+                
+                initBarChart = NSString(format:"drawBarChart(['%@','%@','%@'],[%@,%@,%@]);", first.food, second.food, "なし", String(first.amount), String(second.amount), "0") as String
+                
+            } else {
+                
+                let first: Calorie = self.caloriesArrayForBarChart[0] as! Calorie
+                let second: Calorie = self.caloriesArrayForBarChart[1] as! Calorie
+                let third: Calorie = self.caloriesArrayForBarChart[2] as! Calorie
+
+                initBarChart = NSString(format:"drawBarChart(['%@','%@','%@'],[%@,%@,%@]);", first.food, second.food, third.food, String(first.amount), String(second.amount), String(third.amount)) as String
+                
+            }
+            
+            //ローカルWebviewのJavaScriptのメソッドをキックする
+            self.grachWebView.stringByEvaluatingJavaScriptFromString(initBarChart)
+            
+        }
+
     }
     
-    //@todo:円グラフ用のデータを作成してWebViewへ描画
-    func displayPieGraphToWebView() {
-        
-    }
-    
-    //@todo:折れ線グラフ用のデータを作成してWebViewへ描画
+    //折れ線グラフ用のデータを作成してWebViewへ描画（同じく汚いからエレガントに書きたい...）
     func displayLineGraphToWebView() {
+        
+        //TableViewに表示しているデータをそのまま使う
+        if self.caloriesArrayForCell.count > 0 {
+            
+            //棒グラフ用の文字列を生成する
+            var initLineChart: String
+            
+            if self.caloriesArrayForCell.count == 1 {
+                
+                let first: Calorie = self.caloriesArrayForCell[0] as! Calorie
+                
+                initLineChart = NSString(format:"drawLineChart(['%@','%@','%@'],[%@,%@,%@]);", first.food, "なし", "なし", String(first.amount), "0", "0") as String
+                
+            } else if self.caloriesArrayForCell.count == 2 {
+                
+                let first: Calorie = self.caloriesArrayForCell[0] as! Calorie
+                let second: Calorie = self.caloriesArrayForCell[1] as! Calorie
+                
+                initLineChart = NSString(format:"drawLineChart(['%@','%@','%@'],[%@,%@,%@]);", first.food, second.food, "なし", String(first.amount), String(second.amount), "0") as String
+                
+            } else {
+                
+                let first: Calorie = self.caloriesArrayForCell[0] as! Calorie
+                let second: Calorie = self.caloriesArrayForCell[1] as! Calorie
+                let third: Calorie = self.caloriesArrayForCell[2] as! Calorie
+                
+                initLineChart = NSString(format:"drawLineChart(['%@','%@','%@'],[%@,%@,%@]);", first.food, second.food, third.food, String(first.amount), String(second.amount), String(third.amount)) as String
+                
+            }
+            
+            //ローカルWebviewのJavaScriptのメソッドをキックする
+            self.grachWebView.stringByEvaluatingJavaScriptFromString(initLineChart)
+            
+        }
         
     }
     
@@ -187,24 +320,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
             case GraphStatus.BarGraph.returnValue():
                 self.selectedGraph = GraphStatus.BarGraph
-                self.displayGraphBase(self.selectedGraph)
-                break
-            
-            case GraphStatus.PieGraph.returnValue():
-                self.selectedGraph = GraphStatus.PieGraph
-                self.displayGraphBase(self.selectedGraph)
+                self.loadLocalHtmlSource(self.selectedGraph)
                 break
             
             case GraphStatus.LineGraph.returnValue():
                 self.selectedGraph = GraphStatus.LineGraph
-                self.displayGraphBase(self.selectedGraph)
+                self.loadLocalHtmlSource(self.selectedGraph)
                 break
             
             default:
                 self.selectedGraph = GraphStatus.BarGraph
-                self.displayGraphBase(self.selectedGraph)
+                self.loadLocalHtmlSource(self.selectedGraph)
                 break
         }
+        
     }
     
     //次のページに遷移するアクション
@@ -218,7 +347,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
 
 }
 

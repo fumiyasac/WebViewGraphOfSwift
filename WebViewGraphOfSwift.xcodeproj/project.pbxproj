@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		4B90CE535831DF446121F3E2 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBFA13AD3803D106A90934B6 /* Pods.framework */; };
+		DE4998381C2468880026E216 /* barchart.html in Resources */ = {isa = PBXBuildFile; fileRef = DE4998361C2468870026E216 /* barchart.html */; };
+		DE4998391C2468880026E216 /* Chart.js in Resources */ = {isa = PBXBuildFile; fileRef = DE4998371C2468870026E216 /* Chart.js */; };
+		DE49983B1C248CFE0026E216 /* linechart.html in Resources */ = {isa = PBXBuildFile; fileRef = DE49983A1C248CFE0026E216 /* linechart.html */; };
 		DE702B921C1F20BE001C842D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE702B911C1F20BD001C842D /* AppDelegate.swift */; };
 		DE702B941C1F20BE001C842D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE702B931C1F20BE001C842D /* ViewController.swift */; };
 		DE702B971C1F20BE001C842D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE702B951C1F20BE001C842D /* Main.storyboard */; };
@@ -16,9 +19,7 @@
 		DE702BA71C1F20BE001C842D /* WebViewGraphOfSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE702BA61C1F20BE001C842D /* WebViewGraphOfSwiftTests.swift */; };
 		DE702BB21C1F20BE001C842D /* WebViewGraphOfSwiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE702BB11C1F20BE001C842D /* WebViewGraphOfSwiftUITests.swift */; };
 		DEDAF2B21C21C90F00A3FFB6 /* AddController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2B11C21C90F00A3FFB6 /* AddController.swift */; };
-		DEDAF2D81C22832100A3FFB6 /* GraphColorPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2D71C22832100A3FFB6 /* GraphColorPattern.swift */; };
 		DEDAF2DA1C22849E00A3FFB6 /* GraphStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2D91C22849E00A3FFB6 /* GraphStatus.swift */; };
-		DEDAF2DF1C22863800A3FFB6 /* ColorDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2DE1C22863800A3FFB6 /* ColorDefinition.swift */; };
 		DEDAF2E41C22892600A3FFB6 /* CalorieDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2E21C22892600A3FFB6 /* CalorieDataCell.swift */; };
 		DEDAF2E51C22892600A3FFB6 /* CalorieDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DEDAF2E31C22892600A3FFB6 /* CalorieDataCell.xib */; };
 		DEDAF2E71C22AA4500A3FFB6 /* Calorie.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2E61C22AA4500A3FFB6 /* Calorie.swift */; };
@@ -48,6 +49,9 @@
 		50A0458B9CE3DDC16716AAAA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		872ABD432AAD289E90B6347E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		BBFA13AD3803D106A90934B6 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE4998361C2468870026E216 /* barchart.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = barchart.html; sourceTree = "<group>"; };
+		DE4998371C2468870026E216 /* Chart.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = Chart.js; sourceTree = "<group>"; };
+		DE49983A1C248CFE0026E216 /* linechart.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = linechart.html; sourceTree = "<group>"; };
 		DE702B8E1C1F20BD001C842D /* WebViewGraphOfSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WebViewGraphOfSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE702B911C1F20BD001C842D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DE702B931C1F20BE001C842D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -62,9 +66,7 @@
 		DE702BB11C1F20BE001C842D /* WebViewGraphOfSwiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewGraphOfSwiftUITests.swift; sourceTree = "<group>"; };
 		DE702BB31C1F20BE001C842D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DEDAF2B11C21C90F00A3FFB6 /* AddController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddController.swift; sourceTree = "<group>"; };
-		DEDAF2D71C22832100A3FFB6 /* GraphColorPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphColorPattern.swift; sourceTree = "<group>"; };
 		DEDAF2D91C22849E00A3FFB6 /* GraphStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphStatus.swift; sourceTree = "<group>"; };
-		DEDAF2DE1C22863800A3FFB6 /* ColorDefinition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorDefinition.swift; sourceTree = "<group>"; };
 		DEDAF2E21C22892600A3FFB6 /* CalorieDataCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalorieDataCell.swift; sourceTree = "<group>"; };
 		DEDAF2E31C22892600A3FFB6 /* CalorieDataCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalorieDataCell.xib; sourceTree = "<group>"; };
 		DEDAF2E61C22AA4500A3FFB6 /* Calorie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Calorie.swift; sourceTree = "<group>"; };
@@ -169,7 +171,6 @@
 		DEDAF2D51C22829B00A3FFB6 /* Constants */ = {
 			isa = PBXGroup;
 			children = (
-				DEDAF2D71C22832100A3FFB6 /* GraphColorPattern.swift */,
 				DEDAF2D91C22849E00A3FFB6 /* GraphStatus.swift */,
 				DEDAF2EA1C22FF1400A3FFB6 /* TextFieldIdentifier.swift */,
 			);
@@ -187,7 +188,6 @@
 		DEDAF2DC1C2285F300A3FFB6 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				DEDAF2DE1C22863800A3FFB6 /* ColorDefinition.swift */,
 				DEDAF2EF1C24154D00A3FFB6 /* ChangeNSDateOrString.swift */,
 			);
 			name = Libraries;
@@ -205,6 +205,9 @@
 		DEDAF2EE1C23F86E00A3FFB6 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				DE49983A1C248CFE0026E216 /* linechart.html */,
+				DE4998361C2468870026E216 /* barchart.html */,
+				DE4998371C2468870026E216 /* Chart.js */,
 				DEDAF2EC1C23DF9100A3FFB6 /* noimage.png */,
 			);
 			name = Assets;
@@ -329,6 +332,9 @@
 				DEDAF2ED1C23DF9100A3FFB6 /* noimage.png in Resources */,
 				DE702B9C1C1F20BE001C842D /* LaunchScreen.storyboard in Resources */,
 				DEDAF2E51C22892600A3FFB6 /* CalorieDataCell.xib in Resources */,
+				DE49983B1C248CFE0026E216 /* linechart.html in Resources */,
+				DE4998381C2468880026E216 /* barchart.html in Resources */,
+				DE4998391C2468880026E216 /* Chart.js in Resources */,
 				DE702B991C1F20BE001C842D /* Assets.xcassets in Resources */,
 				DE702B971C1F20BE001C842D /* Main.storyboard in Resources */,
 			);
@@ -405,8 +411,6 @@
 			files = (
 				DEDAF2E41C22892600A3FFB6 /* CalorieDataCell.swift in Sources */,
 				DEDAF2B21C21C90F00A3FFB6 /* AddController.swift in Sources */,
-				DEDAF2D81C22832100A3FFB6 /* GraphColorPattern.swift in Sources */,
-				DEDAF2DF1C22863800A3FFB6 /* ColorDefinition.swift in Sources */,
 				DE702B941C1F20BE001C842D /* ViewController.swift in Sources */,
 				DEDAF2E71C22AA4500A3FFB6 /* Calorie.swift in Sources */,
 				DEDAF2EB1C22FF1400A3FFB6 /* TextFieldIdentifier.swift in Sources */,

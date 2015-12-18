@@ -98,8 +98,26 @@ class Calorie: Object {
         }
     }
     
-    //登録データの全件取得をする
-    static func fetchAllCalorieList() -> [Calorie] {
+    //インスタンス削除用メソッド
+    func delete() {
+        try! Calorie.realm.write {
+            Calorie.realm.delete(self)
+        }
+    }
+    
+    //登録日順のデータの全件取得をする
+    static func fetchAllCalorieListSortByDate() -> [Calorie] {
+        let calories = realm.objects(Calorie).sorted("eatDate", ascending: false)
+        var calorieList: [Calorie] = []
+        for calorie in calories {
+            calorieList.append(calorie)
+        }
+        return calorieList
+    }
+    
+    //カロリー順のデータの全件取得をする
+    static func fetchAllCalorieListSortByAmount() -> [Calorie] {
+        
         let calories = realm.objects(Calorie).sorted("amount", ascending: false)
         var calorieList: [Calorie] = []
         for calorie in calories {
