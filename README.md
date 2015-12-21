@@ -2,7 +2,12 @@
 [ING]WebViewとChart.jsでグラフ表示をする＆Realmを使ったカロリー記録サンプルアプリ（iOS Sample Study: Swift）
 
 今回はなのですが、実際のアプリに近い想定でグラフ付きのカロリーデータ記録系のアプリのサンプルを作成しました。
-主な機能としては、
+
+
+![今回のサンプルの画面一覧](https://qiita-image-store.s3.amazonaws.com/0/17400/5d7b8dc8-e45a-0ab3-1f5f-43dfb87f448c.png)
+
+
+本サンプルの具体的な機能としては、
 
 + Realmの基本的な扱い方とデータ永続化処理の実装
 + Realmで画像の投稿を可能にする
