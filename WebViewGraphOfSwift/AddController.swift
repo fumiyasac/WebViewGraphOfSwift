@@ -209,6 +209,7 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
         
         //フォトアルバムを表示
         let ipc = UIImagePickerController()
+        ipc.allowsEditing = true
         ipc.delegate = self
         ipc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
         presentViewController(ipc, animated: true, completion: nil)
@@ -219,6 +220,7 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
         
         //カメラを起動
         let ip = UIImagePickerController()
+        ip.allowsEditing = true
         ip.delegate = self
         ip.sourceType = UIImagePickerControllerSourceType.Camera
         presentViewController(ip, animated: true, completion: nil)
