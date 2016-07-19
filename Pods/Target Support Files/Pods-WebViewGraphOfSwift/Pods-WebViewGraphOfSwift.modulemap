@@ -1,0 +1,6 @@
+framework module Pods_WebViewGraphOfSwift {
+  umbrella header "Pods-WebViewGraphOfSwift-umbrella.h"
+
+  export *
+  module * { export * }
+}

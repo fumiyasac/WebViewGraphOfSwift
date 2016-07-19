@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4B90CE535831DF446121F3E2 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BBFA13AD3803D106A90934B6 /* Pods.framework */; };
+		7295B4616DDCC6ADA11FA0EF /* Pods_WebViewGraphOfSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 699681FC8E7A776361776C93 /* Pods_WebViewGraphOfSwift.framework */; };
 		DE4998381C2468880026E216 /* barchart.html in Resources */ = {isa = PBXBuildFile; fileRef = DE4998361C2468870026E216 /* barchart.html */; };
 		DE4998391C2468880026E216 /* Chart.js in Resources */ = {isa = PBXBuildFile; fileRef = DE4998371C2468870026E216 /* Chart.js */; };
 		DE49983B1C248CFE0026E216 /* linechart.html in Resources */ = {isa = PBXBuildFile; fileRef = DE49983A1C248CFE0026E216 /* linechart.html */; };
@@ -46,8 +46,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		50A0458B9CE3DDC16716AAAA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		872ABD432AAD289E90B6347E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		0DB705AD1AD56278B60D11E9 /* Pods-WebViewGraphOfSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebViewGraphOfSwift.release.xcconfig"; path = "Pods/Target Support Files/Pods-WebViewGraphOfSwift/Pods-WebViewGraphOfSwift.release.xcconfig"; sourceTree = "<group>"; };
+		3030E1A6DBDCABBF821ECFF0 /* Pods-WebViewGraphOfSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WebViewGraphOfSwift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WebViewGraphOfSwift/Pods-WebViewGraphOfSwift.debug.xcconfig"; sourceTree = "<group>"; };
+		699681FC8E7A776361776C93 /* Pods_WebViewGraphOfSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WebViewGraphOfSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBFA13AD3803D106A90934B6 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE4998361C2468870026E216 /* barchart.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = barchart.html; sourceTree = "<group>"; };
 		DE4998371C2468870026E216 /* Chart.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = Chart.js; sourceTree = "<group>"; };
@@ -80,7 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B90CE535831DF446121F3E2 /* Pods.framework in Frameworks */,
+				7295B4616DDCC6ADA11FA0EF /* Pods_WebViewGraphOfSwift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,8 +106,18 @@
 			isa = PBXGroup;
 			children = (
 				BBFA13AD3803D106A90934B6 /* Pods.framework */,
+				699681FC8E7A776361776C93 /* Pods_WebViewGraphOfSwift.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8332866D9EC729ABF56ABBC6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3030E1A6DBDCABBF821ECFF0 /* Pods-WebViewGraphOfSwift.debug.xcconfig */,
+				0DB705AD1AD56278B60D11E9 /* Pods-WebViewGraphOfSwift.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		DE702B851C1F20BD001C842D = {
@@ -116,8 +127,8 @@
 				DE702BA51C1F20BE001C842D /* WebViewGraphOfSwiftTests */,
 				DE702BB01C1F20BE001C842D /* WebViewGraphOfSwiftUITests */,
 				DE702B8F1C1F20BD001C842D /* Products */,
-				E4AE566E493235C547776653 /* Pods */,
 				712B5339C5CAB08CE539E89A /* Frameworks */,
+				8332866D9EC729ABF56ABBC6 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -213,15 +224,6 @@
 			name = Assets;
 			sourceTree = "<group>";
 		};
-		E4AE566E493235C547776653 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				50A0458B9CE3DDC16716AAAA /* Pods.debug.xcconfig */,
-				872ABD432AAD289E90B6347E /* Pods.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -229,12 +231,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DE702BB61C1F20BE001C842D /* Build configuration list for PBXNativeTarget "WebViewGraphOfSwift" */;
 			buildPhases = (
-				E7C853957A20B0C4ECA30873 /* Check Pods Manifest.lock */,
+				7F156E5CADAC3ACA2DB99BB4 /* [CP] Check Pods Manifest.lock */,
 				DE702B8A1C1F20BD001C842D /* Sources */,
 				DE702B8B1C1F20BD001C842D /* Frameworks */,
 				DE702B8C1C1F20BD001C842D /* Resources */,
-				BDDC162E680AC569D9E25341 /* Embed Pods Frameworks */,
-				F95D6C1C3F16E8769A9B9C48 /* Copy Pods Resources */,
+				E2DA0DB2F08348445DAC86FD /* [CP] Embed Pods Frameworks */,
+				CF108EE0EE2BFF28AFD3D04D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -357,29 +359,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		BDDC162E680AC569D9E25341 /* Embed Pods Frameworks */ = {
+		7F156E5CADAC3ACA2DB99BB4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E7C853957A20B0C4ECA30873 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -387,19 +374,34 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		F95D6C1C3F16E8769A9B9C48 /* Copy Pods Resources */ = {
+		CF108EE0EE2BFF28AFD3D04D /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WebViewGraphOfSwift/Pods-WebViewGraphOfSwift-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E2DA0DB2F08348445DAC86FD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WebViewGraphOfSwift/Pods-WebViewGraphOfSwift-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -554,7 +556,7 @@
 		};
 		DE702BB71C1F20BE001C842D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50A0458B9CE3DDC16716AAAA /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 3030E1A6DBDCABBF821ECFF0 /* Pods-WebViewGraphOfSwift.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = WebViewGraphOfSwift/Info.plist;
@@ -566,7 +568,7 @@
 		};
 		DE702BB81C1F20BE001C842D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 872ABD432AAD289E90B6347E /* Pods.release.xcconfig */;
+			baseConfigurationReference = 0DB705AD1AD56278B60D11E9 /* Pods-WebViewGraphOfSwift.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = WebViewGraphOfSwift/Info.plist;

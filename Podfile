@@ -1,2 +1,4 @@
 use_frameworks!
-pod 'RealmSwift'
+target 'WebViewGraphOfSwift' do
+  pod 'RealmSwift'
+end
