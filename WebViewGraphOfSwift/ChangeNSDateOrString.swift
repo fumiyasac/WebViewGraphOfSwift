@@ -12,26 +12,26 @@ import UIKit
 struct ChangeNSDateOrString {
     
     //NSDate → Stringへの変換
-    static func convertNSDateToString (date: NSDate) -> String {
+    static func convertNSDateToString (_ date: Date) -> String {
         
-        let dateFormatter: NSDateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "ja_JP")
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ja_JP")
         dateFormatter.dateFormat = "yyyy/MM/dd"
-        let dateString: String = dateFormatter.stringFromDate(date)
+        let dateString: String = dateFormatter.string(from: date)
         return dateString
     }
 
     //String → NSDateへの変換
-    static func convertStringToNSDate (dateString: String!) -> NSDate {
+    static func convertStringToNSDate (_ dateString: String!) -> Date {
         
         if dateString != nil {
-            let dateFormatter: NSDateFormatter = NSDateFormatter()
-            dateFormatter.locale = NSLocale(localeIdentifier: "ja")
+            let dateFormatter: DateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: "ja")
             dateFormatter.dateFormat = "yyyy/MM/dd"
-            let stringDate: NSDate = dateFormatter.dateFromString(dateString)!
+            let stringDate: Date = dateFormatter.date(from: dateString)!
             return stringDate
         } else {
-            let date = NSDate()
+            let date = Date()
             return date
         }
     }

@@ -36,7 +36,7 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
         super.viewDidLoad()
         
         //画像の描画モードの指定
-        self.foodPicture.contentMode = UIViewContentMode.ScaleToFill
+        self.foodPicture.contentMode = UIViewContentMode.scaleToFill
         self.selectedImage = UIImage(named: "noimage.png")
         self.foodPicture.image = self.selectedImage
         
@@ -46,12 +46,12 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
         self.eatDateField.placeholder = "(例）2015/12/22"
         
         //UITextFieldを識別するためのタグ
-        self.foodNameField.tag = TextFieldIdentifier.InputFood.returnValue()
-        self.calorieAmountField.tag = TextFieldIdentifier.InputCalorie.returnValue()
-        self.eatDateField.tag = TextFieldIdentifier.InputDate.returnValue()
+        self.foodNameField.tag = TextFieldIdentifier.inputFood.returnValue()
+        self.calorieAmountField.tag = TextFieldIdentifier.inputCalorie.returnValue()
+        self.eatDateField.tag = TextFieldIdentifier.inputDate.returnValue()
         
         //UITextFieldのその他設定
-        self.calorieAmountField.keyboardType = UIKeyboardType.NumberPad
+        self.calorieAmountField.keyboardType = UIKeyboardType.numberPad
         self.foodNameField.delegate = self
         self.calorieAmountField.delegate = self
         self.eatDateField.delegate = self
@@ -62,51 +62,51 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
     func showDatePicker() {
         self.datepickerBackground.alpha = 1
         self.datepickerButton.alpha = 1
-        self.datepickerButton.enabled = true
+        self.datepickerButton.isEnabled = true
         self.datepickerArea.alpha = 1
-        self.datepickerArea.enabled = true
+        self.datepickerArea.isEnabled = true
     }
     
     //デイトピッカーを非表示にする
     func hideDatePicker() {
         self.datepickerBackground.alpha = 0
         self.datepickerButton.alpha = 0
-        self.datepickerButton.enabled = false
+        self.datepickerButton.isEnabled = false
         self.datepickerArea.alpha = 0
-        self.datepickerArea.enabled = false
+        self.datepickerArea.isEnabled = false
     }
     
     //※ボタンアクションだとキーボードが重なってしまうのでUITextFieldDelegateを使う
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
 
         //カメラボタンを無効にする
-        self.foodPictureBtn.enabled = false
+        self.foodPictureBtn.isEnabled = false
         
         //「食べた日にち」のテキストフィールドタップ時のアクションのテキストフィールドがタップされた際はデイトピッカーを表示する
-        if textField.tag == TextFieldIdentifier.InputDate.returnValue() {
+        if textField.tag == TextFieldIdentifier.inputDate.returnValue() {
 
-            self.foodNameField.enabled = false
-            self.calorieAmountField.enabled = false
-            self.eatDateField.enabled = true
+            self.foodNameField.isEnabled = false
+            self.calorieAmountField.isEnabled = false
+            self.eatDateField.isEnabled = true
             self.showDatePicker()
             return false
             
         } else {
             
             //「今食べたもの」のテキストフィールドタップ時のアクション
-            if textField.tag == TextFieldIdentifier.InputCalorie.returnValue() {
+            if textField.tag == TextFieldIdentifier.inputCalorie.returnValue() {
                 
-                self.foodNameField.enabled = false
-                self.calorieAmountField.enabled = true
-                self.eatDateField.enabled = false
+                self.foodNameField.isEnabled = false
+                self.calorieAmountField.isEnabled = true
+                self.eatDateField.isEnabled = false
                 self.hideDatePicker()
             
             //「推定カロリー」のテキストフィールドタップ時のアクション
-            } else if textField.tag == TextFieldIdentifier.InputFood.returnValue() {
+            } else if textField.tag == TextFieldIdentifier.inputFood.returnValue() {
                 
-                self.foodNameField.enabled = true
-                self.calorieAmountField.enabled = false
-                self.eatDateField.enabled = false
+                self.foodNameField.isEnabled = true
+                self.calorieAmountField.isEnabled = false
+                self.eatDateField.isEnabled = false
                 self.hideDatePicker()
             }
             return true
@@ -115,7 +115,7 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
     }
     
     //背景をタップしてキーボードを引っ込めるアクション
-    @IBAction func hideKeyboardAction(sender: UITapGestureRecognizer) {
+    @IBAction func hideKeyboardAction(_ sender: UITapGestureRecognizer) {
         
         //表示キーワード・デイトピッカーを隠す
         self.view.endEditing(true)
@@ -126,7 +126,7 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
     }
     
     //デイトピッカーのボタンを押した際のアクション
-    @IBAction func inputDatepickerAction(sender: UIButton) {
+    @IBAction func inputDatepickerAction(_ sender: UIButton) {
         
         //デイトピッカーを隠す
         self.hideDatePicker()
@@ -143,50 +143,50 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
     func resetTextFieldStatus() {
 
         //非活性状態の解除
-        self.foodNameField.enabled = true
-        self.calorieAmountField.enabled = true
-        self.eatDateField.enabled = true
-        self.foodPictureBtn.enabled = true
+        self.foodNameField.isEnabled = true
+        self.calorieAmountField.isEnabled = true
+        self.eatDateField.isEnabled = true
+        self.foodPictureBtn.isEnabled = true
         
     }
     
     //カメラ・フォトライブラリを起動するアクション
-    @IBAction func activateCameraAction(sender: UIButton) {
+    @IBAction func activateCameraAction(_ sender: UIButton) {
         
         //UIActionSheetを起動して選択させて、カメラ・フォトライブラリを起動
         let alertActionSheet = UIAlertController(
             title: "「食べたもの」の写真を記録する",
             message: "写真と一緒にカロリーを記録しましょう(^^)",
-            preferredStyle: UIAlertControllerStyle.ActionSheet
+            preferredStyle: UIAlertControllerStyle.actionSheet
         )
         
         //UIActionSheetの戻り値をチェック
         alertActionSheet.addAction(
             UIAlertAction(
                 title: "ライブラリから選択",
-                style: UIAlertActionStyle.Default,
+                style: UIAlertActionStyle.default,
                 handler: handlerActionSheet
             )
         )
         alertActionSheet.addAction(
             UIAlertAction(
                 title: "カメラで撮影",
-                style: UIAlertActionStyle.Default,
+                style: UIAlertActionStyle.default,
                 handler: handlerActionSheet
             )
         )
         alertActionSheet.addAction(
             UIAlertAction(
                 title: "キャンセル",
-                style: UIAlertActionStyle.Cancel,
+                style: UIAlertActionStyle.cancel,
                 handler: handlerActionSheet
             )
         )
-        presentViewController(alertActionSheet, animated: true, completion: nil)
+        present(alertActionSheet, animated: true, completion: nil)
     }
     
     //アクションシートの結果に応じて処理を変更
-    func handlerActionSheet(ac: UIAlertAction) -> Void {
+    func handlerActionSheet(_ ac: UIAlertAction) -> Void {
         
         switch ac.title! {
 
@@ -211,8 +211,8 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
         let ipc = UIImagePickerController()
         ipc.allowsEditing = true
         ipc.delegate = self
-        ipc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        presentViewController(ipc, animated: true, completion: nil)
+        ipc.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        present(ipc, animated: true, completion: nil)
     }
 
     //カメラで撮影してimageに書き出す
@@ -222,35 +222,35 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
         let ip = UIImagePickerController()
         ip.allowsEditing = true
         ip.delegate = self
-        ip.sourceType = UIImagePickerControllerSourceType.Camera
-        presentViewController(ip, animated: true, completion: nil)
+        ip.sourceType = UIImagePickerControllerSourceType.camera
+        present(ip, animated: true, completion: nil)
     }
     
     //画像を選択した時のイベント
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
         
         //画像をセットして戻る
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
         
         //リサイズして表示する
-        let resizedImage = CGRectMake(
-            image.size.width / 4.0,
-            image.size.height / 4.0,
-            image.size.width / 2.0,
-            image.size.height / 2.0
+        let resizedImage = CGRect(
+            x: image.size.width / 4.0,
+            y: image.size.height / 4.0,
+            width: image.size.width / 2.0,
+            height: image.size.height / 2.0
         )
-        let cgImage = CGImageCreateWithImageInRect(image.CGImage, resizedImage)
-        self.foodPicture.image = UIImage(CGImage: cgImage!)
+        let cgImage = (image.cgImage)?.cropping(to: resizedImage)
+        self.foodPicture.image = UIImage(cgImage: cgImage!)
         //self.foodPicture.image = image
     }
     
     //前の画面に戻るアクション
-    @IBAction func backViewControllerAction(sender: UIButton) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func backViewControllerAction(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     //カロリーデータを記録するアクション
-    @IBAction func saveCalorieDataAction(sender: UIButton) {
+    @IBAction func saveCalorieDataAction(_ sender: UIButton) {
         
         //UIImageデータを取得する
         self.selectedImage = self.foodPicture.image
@@ -267,16 +267,16 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
             let errorAlert = UIAlertController(
                 title: "エラー",
                 message: "入力必須の項目に不備があります。",
-                preferredStyle: UIAlertControllerStyle.Alert
+                preferredStyle: UIAlertControllerStyle.alert
             )
             errorAlert.addAction(
                 UIAlertAction(
                     title: "OK",
-                    style: UIAlertActionStyle.Default,
+                    style: UIAlertActionStyle.default,
                     handler: nil
                 )
             )
-            presentViewController(errorAlert, animated: true, completion: nil)
+            present(errorAlert, animated: true, completion: nil)
         
         //OK:データを1件Realmにセーブする
         } else {
@@ -288,39 +288,39 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
             calorieObject.amount = Int(self.calorieAmount)!
             
             //String（yyyy/MM/dd）をNSDate型に変換
-            let calorieDate: NSDate = ChangeNSDateOrString.convertStringToNSDate(self.eatDate)
+            let calorieDate: Date = ChangeNSDateOrString.convertStringToNSDate(self.eatDate)
             calorieObject.eatDate = calorieDate
             
             //登録処理
             calorieObject.save()
             
             //全ボタン非活性
-            self.foodNameField.enabled = false
-            self.calorieAmountField.enabled = false
-            self.eatDateField.enabled = false
-            self.foodPictureBtn.enabled = false
+            self.foodNameField.isEnabled = false
+            self.calorieAmountField.isEnabled = false
+            self.eatDateField.isEnabled = false
+            self.foodPictureBtn.isEnabled = false
             
             //登録されたアラートを表示してOKを押すと戻る
             let errorAlert = UIAlertController(
                 title: "完了",
                 message: "入力データが登録されました。",
-                preferredStyle: UIAlertControllerStyle.Alert
+                preferredStyle: UIAlertControllerStyle.alert
             )
             errorAlert.addAction(
                 UIAlertAction(
                     title: "OK",
-                    style: UIAlertActionStyle.Default,
+                    style: UIAlertActionStyle.default,
                     handler: saveComplete
                 )
             )
-            presentViewController(errorAlert, animated: true, completion: nil)
+            present(errorAlert, animated: true, completion: nil)
         }
         
     }
     
     //登録が完了した際のアクション
-    func saveComplete(ac: UIAlertAction) -> Void {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    func saveComplete(_ ac: UIAlertAction) -> Void {
+        self.dismiss(animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {

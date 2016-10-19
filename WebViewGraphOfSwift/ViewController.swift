@@ -36,7 +36,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet var selectGraphSegment: UISegmentedControl!
     @IBOutlet var recordTableView: UITableView!
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.fetchAndReloadData()
     }
     
@@ -59,7 +59,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //Xibのクラスを読み込む宣言を行う
         let nibDefault:UINib = UINib(nibName: "CalorieDataCell", bundle: nil)
-        self.recordTableView.registerNib(nibDefault, forCellReuseIdentifier: "CalorieDataCell")
+        self.recordTableView.register(nibDefault, forCellReuseIdentifier: "CalorieDataCell")
         
     }
     
@@ -75,7 +75,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         if self.cellCount != 0 {
             for calorie in calories {
-                self.caloriesArrayForCell.addObject(calorie)
+                self.caloriesArrayForCell.add(calorie)
             }
         }
         
@@ -84,7 +84,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let caloriesForBarChart = Calorie.fetchAllCalorieListSortByAmount()
         if caloriesForBarChart.count != 0 {
             for calorieForBarChart in caloriesForBarChart {
-                self.caloriesArrayForBarChart.addObject(calorieForBarChart)
+                self.caloriesArrayForBarChart.add(calorieForBarChart)
             }
         }
         
@@ -95,61 +95,61 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.selectGraphSegment.selectedSegmentIndex = 0
         
         //グラフの初期状態を設定する
-        self.selectedGraph = GraphStatus.BarGraph
+        self.selectedGraph = GraphStatus.barGraph
         
         //ローカルhtmlを読み込む
         self.loadLocalHtmlSource(self.selectedGraph)
     }
     
     //TableView: テーブルの要素数を設定する
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return self.sectionCount
     }
     
     //TableView: テーブルのセクションのセル数を設定する
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.cellCount
     }
     
     //TableView: Editableの状態にする.
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
     //TableView: 特定の行のボタン操作を有効にする.
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         print("commitEdittingStyle:\(editingStyle)")
     }
     
     //TableView: Buttonを拡張＆データ削除処理
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         //削除ボタン
-        let myDeleteButton: UITableViewRowAction = UITableViewRowAction(style: .Normal, title: "削除") { (action, index) -> Void in
+        let myDeleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: "削除") { (action, index) -> Void in
             
             //テーブルビューを編集不可にする
-            tableView.editing = false
+            tableView.isEditing = false
             
             //データを1件削除
-            let calorieData: Calorie = self.caloriesArrayForCell[indexPath.row] as! Calorie
+            let calorieData: Calorie = self.caloriesArrayForCell[(indexPath as NSIndexPath).row] as! Calorie
             calorieData.delete()
             
             //データをリロードする
             self.fetchAndReloadData()
             
         }
-        myDeleteButton.backgroundColor = UIColor.redColor()
+        myDeleteButton.backgroundColor = UIColor.red
         return [myDeleteButton]
     }
     
     //TableView: 表示するセルの中身を設定する
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         //Xibファイルを元にデータを作成する
-        let cell = tableView.dequeueReusableCellWithIdentifier("CalorieDataCell") as? CalorieDataCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CalorieDataCell") as? CalorieDataCell
         
         //テキスト・画像等の表示
-        let calorieData: Calorie = self.caloriesArrayForCell[indexPath.row] as! Calorie
+        let calorieData: Calorie = self.caloriesArrayForCell[(indexPath as NSIndexPath).row] as! Calorie
         
         cell!.calorieTitle.text = calorieData.food
         cell!.calorieValue.text = String(calorieData.amount) + "kcal"
@@ -162,19 +162,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell!.calorieImage.image = calorieData.image
 
         //セルのアクセサリタイプと背景の設定
-        cell!.accessoryType = UITableViewCellAccessoryType.None
-        cell!.selectionStyle = UITableViewCellSelectionStyle.None
+        cell!.accessoryType = UITableViewCellAccessoryType.none
+        cell!.selectionStyle = UITableViewCellSelectionStyle.none
         
         return cell!
     }
     
     //TableView: セルをタップした時に呼び出される
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //@todo: go some controller...
     }
     
     //TableView: セルの高さを返す
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return cellHeight
     }
     
@@ -184,12 +184,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     //WebView: ローカルのHTMLファイルのロードが完了したら実行される
-    func webViewDidFinishLoad(webView: UIWebView) {
+    func webViewDidFinishLoad(_ webView: UIWebView) {
         self.displayGraphBase(self.selectedGraph)
     }
     
     //ローカルのhtmlファイルを読み込む
-    func loadLocalHtmlSource(status: GraphStatus) {
+    func loadLocalHtmlSource(_ status: GraphStatus) {
         
         //htmlファイルへアクセスする
         do {
@@ -198,19 +198,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             var path: String = ""
             
             //棒グラフ
-            if status == GraphStatus.BarGraph {
+            if status == GraphStatus.barGraph {
                 
-                path = NSBundle.mainBundle().pathForResource("barchart", ofType: "html")!
+                path = Bundle.main.path(forResource: "barchart", ofType: "html")!
                 
             //折れ線グラフ
-            } else if status == GraphStatus.LineGraph {
+            } else if status == GraphStatus.lineGraph {
                 
-                path = NSBundle.mainBundle().pathForResource("linechart", ofType: "html")!
+                path = Bundle.main.path(forResource: "linechart", ofType: "html")!
                 
             }
             
-            let htmlFile = try String(contentsOfFile: path, encoding: NSUTF8StringEncoding)
-            self.grachWebView.loadHTMLString(htmlFile, baseURL: NSURL(fileURLWithPath: NSBundle.mainBundle().bundlePath))
+            let htmlFile = try String(contentsOfFile: path, encoding: String.Encoding.utf8)
+            self.grachWebView.loadHTMLString(htmlFile, baseURL: URL(fileURLWithPath: Bundle.main.bundlePath))
             self.grachWebView.scalesPageToFit = false
             
         } catch _ as NSError {
@@ -220,17 +220,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     //グラフの状態に応じてグラフデータを整形して読み込む
-    func displayGraphBase(status: GraphStatus) {
+    func displayGraphBase(_ status: GraphStatus) {
         
         switch (status) {
             
             //棒グラフ
-            case GraphStatus.BarGraph:
+            case GraphStatus.barGraph:
                 self.displayBarGraphToWebView()
                 break
             
             //折れ線グラフ
-            case GraphStatus.LineGraph:
+            case GraphStatus.lineGraph:
                 self.displayLineGraphToWebView()
                 break
         }
@@ -269,7 +269,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             
             //ローカルWebviewのJavaScriptのメソッドをキックする
-            self.grachWebView.stringByEvaluatingJavaScriptFromString(initBarChart)
+            self.grachWebView.stringByEvaluatingJavaScript(from: initBarChart)
             
         }
 
@@ -308,29 +308,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             
             //ローカルWebviewのJavaScriptのメソッドをキックする
-            self.grachWebView.stringByEvaluatingJavaScriptFromString(initLineChart)
+            self.grachWebView.stringByEvaluatingJavaScript(from: initLineChart)
             
         }
         
     }
     
     //セグメントコントロールで切り替え時に行われるアクション
-    @IBAction func changeGraphDisplayAction(sender: UISegmentedControl) {
+    @IBAction func changeGraphDisplayAction(_ sender: UISegmentedControl) {
         
         switch (sender.selectedSegmentIndex) {
         
-            case GraphStatus.BarGraph.returnValue():
-                self.selectedGraph = GraphStatus.BarGraph
+            case GraphStatus.barGraph.returnValue():
+                self.selectedGraph = GraphStatus.barGraph
                 self.loadLocalHtmlSource(self.selectedGraph)
                 break
             
-            case GraphStatus.LineGraph.returnValue():
-                self.selectedGraph = GraphStatus.LineGraph
+            case GraphStatus.lineGraph.returnValue():
+                self.selectedGraph = GraphStatus.lineGraph
                 self.loadLocalHtmlSource(self.selectedGraph)
                 break
             
             default:
-                self.selectedGraph = GraphStatus.BarGraph
+                self.selectedGraph = GraphStatus.barGraph
                 self.loadLocalHtmlSource(self.selectedGraph)
                 break
         }
@@ -338,11 +338,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     //次のページに遷移するアクション
-    @IBAction func goAddCalorieAction(sender: UIButton) {
+    @IBAction func goAddCalorieAction(_ sender: UIButton) {
         
         //詳細データを遷移先へ引き渡す処理（AddControllerのStoryBoardID：Add）
-        let addController: AddController = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("Add") as! AddController
-        self.presentViewController(addController, animated: true, completion: nil)
+        let addController: AddController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "Add") as! AddController
+        self.present(addController, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {

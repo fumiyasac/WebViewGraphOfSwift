@@ -295,13 +295,18 @@
 				TargetAttributes = {
 					DE702B8D1C1F20BD001C842D = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = S5BF5553KY;
+						LastSwiftMigration = 0800;
+						ProvisioningStyle = Manual;
 					};
 					DE702BA11C1F20BE001C842D = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 0800;
 						TestTargetID = DE702B8D1C1F20BD001C842D;
 					};
 					DE702BAC1C1F20BE001C842D = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 0800;
 						TestTargetID = DE702B8D1C1F20BD001C842D;
 					};
 				};
@@ -371,7 +376,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		CF108EE0EE2BFF28AFD3D04D /* [CP] Copy Pods Resources */ = {
@@ -509,7 +514,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -547,7 +552,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -559,10 +564,15 @@
 			baseConfigurationReference = 3030E1A6DBDCABBF821ECFF0 /* Pods-WebViewGraphOfSwift.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = S5BF5553KY;
 				INFOPLIST_FILE = WebViewGraphOfSwift/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.just1factory.WebViewGraphOfSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "52d389ea-cad8-42bd-9d46-047338c5d9f4";
+				PROVISIONING_PROFILE_SPECIFIER = fumiyasac_ios_development;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -571,10 +581,16 @@
 			baseConfigurationReference = 0DB705AD1AD56278B60D11E9 /* Pods-WebViewGraphOfSwift.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = S5BF5553KY;
 				INFOPLIST_FILE = WebViewGraphOfSwift/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.just1factory.WebViewGraphOfSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "11dff38f-1378-4e00-98ff-c59ed5f0447f";
+				PROVISIONING_PROFILE_SPECIFIER = "XC: net.just1factory.*";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -586,6 +602,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.just1factory.WebViewGraphOfSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WebViewGraphOfSwift.app/WebViewGraphOfSwift";
 			};
 			name = Debug;
@@ -598,6 +615,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.just1factory.WebViewGraphOfSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WebViewGraphOfSwift.app/WebViewGraphOfSwift";
 			};
 			name = Release;
@@ -609,6 +627,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.just1factory.WebViewGraphOfSwiftUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = WebViewGraphOfSwift;
 				USES_XCTRUNNER = YES;
 			};
@@ -621,6 +640,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.just1factory.WebViewGraphOfSwiftUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = WebViewGraphOfSwift;
 				USES_XCTRUNNER = YES;
 			};

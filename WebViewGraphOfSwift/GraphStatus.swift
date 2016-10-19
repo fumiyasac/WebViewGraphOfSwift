@@ -9,8 +9,8 @@
 //グラフのパターンを定義したenum
 enum GraphStatus {
     
-    case BarGraph
-    case LineGraph
+    case barGraph
+    case lineGraph
     
     //初期値を返す
     func initalValue() -> Int {
@@ -20,9 +20,9 @@ enum GraphStatus {
     //状態に対応する値を返す
     func returnValue() -> Int {
         switch (self) {
-        case .BarGraph:
+        case .barGraph:
             return 0
-        case .LineGraph:
+        case .lineGraph:
             return 1
         }
     }

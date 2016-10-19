@@ -10,20 +10,20 @@
 enum TextFieldIdentifier {
     
     //テキストフィールドの名称
-    case InputFood
-    case InputCalorie
-    case InputDate
+    case inputFood
+    case inputCalorie
+    case inputDate
     
     //状態に対応する値を返す
     func returnValue() -> Int {
         
         //各々のケース
         switch (self) {
-            case .InputFood:
+            case .inputFood:
                 return 0
-            case .InputCalorie:
+            case .inputCalorie:
                 return 1
-            case .InputDate:
+            case .inputDate:
                 return 2
         }
     }

@@ -18,7 +18,7 @@ class Calorie: Object {
     static let realm = try! Realm()
     
     //id
-    dynamic private var id = 0
+    dynamic fileprivate var id = 0
     
     //今食べたもの
     dynamic var food = ""
@@ -27,7 +27,7 @@ class Calorie: Object {
     dynamic var amount = 0
     
     //食べた日にち
-    dynamic var eatDate = NSDate(timeIntervalSince1970: 0)
+    dynamic var eatDate = Date(timeIntervalSince1970: 0)
     
     //その時の写真
     /**
@@ -38,7 +38,7 @@ class Calorie: Object {
      *
      */
     //
-    dynamic private var _image: UIImage? = nil
+    dynamic fileprivate var _image: UIImage? = nil
     
     dynamic var image: UIImage? {
         
@@ -63,7 +63,7 @@ class Calorie: Object {
         }
     }
     
-    dynamic private var imageData: NSData? = nil
+    dynamic fileprivate var imageData: Data? = nil
     
     //PrimaryKeyの設定
     override static func primaryKey() -> String? {
@@ -84,7 +84,7 @@ class Calorie: Object {
     
     //プライマリキーの作成メソッド
     static func getLastId() -> Int {
-        if let calorie = realm.objects(Calorie).last {
+        if let calorie = realm.objects(Calorie.self).last {
             return calorie.id + 1
         } else {
             return 1
@@ -107,7 +107,7 @@ class Calorie: Object {
     
     //登録日順のデータの全件取得をする
     static func fetchAllCalorieListSortByDate() -> [Calorie] {
-        let calories = realm.objects(Calorie).sorted("eatDate", ascending: false)
+        let calories = realm.objects(Calorie.self).sorted(byProperty: "eatDate", ascending: false)
         var calorieList: [Calorie] = []
         for calorie in calories {
             calorieList.append(calorie)
@@ -118,7 +118,7 @@ class Calorie: Object {
     //カロリー順のデータの全件取得をする
     static func fetchAllCalorieListSortByAmount() -> [Calorie] {
         
-        let calories = realm.objects(Calorie).sorted("amount", ascending: false)
+        let calories = realm.objects(Calorie.self).sorted(byProperty: "amount", ascending: false)
         var calorieList: [Calorie] = []
         for calorie in calories {
             calorieList.append(calorie)
