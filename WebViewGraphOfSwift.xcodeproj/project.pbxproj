@@ -25,7 +25,7 @@
 		DEDAF2E71C22AA4500A3FFB6 /* Calorie.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2E61C22AA4500A3FFB6 /* Calorie.swift */; };
 		DEDAF2EB1C22FF1400A3FFB6 /* TextFieldIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2EA1C22FF1400A3FFB6 /* TextFieldIdentifier.swift */; };
 		DEDAF2ED1C23DF9100A3FFB6 /* noimage.png in Resources */ = {isa = PBXBuildFile; fileRef = DEDAF2EC1C23DF9100A3FFB6 /* noimage.png */; };
-		DEDAF2F01C24154E00A3FFB6 /* ChangeNSDateOrString.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2EF1C24154D00A3FFB6 /* ChangeNSDateOrString.swift */; };
+		DEDAF2F01C24154E00A3FFB6 /* ChangeDateOrString.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEDAF2EF1C24154D00A3FFB6 /* ChangeDateOrString.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,7 +73,7 @@
 		DEDAF2E61C22AA4500A3FFB6 /* Calorie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Calorie.swift; sourceTree = "<group>"; };
 		DEDAF2EA1C22FF1400A3FFB6 /* TextFieldIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldIdentifier.swift; sourceTree = "<group>"; };
 		DEDAF2EC1C23DF9100A3FFB6 /* noimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimage.png; sourceTree = "<group>"; };
-		DEDAF2EF1C24154D00A3FFB6 /* ChangeNSDateOrString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeNSDateOrString.swift; sourceTree = "<group>"; };
+		DEDAF2EF1C24154D00A3FFB6 /* ChangeDateOrString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeDateOrString.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,7 +199,7 @@
 		DEDAF2DC1C2285F300A3FFB6 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				DEDAF2EF1C24154D00A3FFB6 /* ChangeNSDateOrString.swift */,
+				DEDAF2EF1C24154D00A3FFB6 /* ChangeDateOrString.swift */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -422,7 +422,7 @@
 				DEDAF2E71C22AA4500A3FFB6 /* Calorie.swift in Sources */,
 				DEDAF2EB1C22FF1400A3FFB6 /* TextFieldIdentifier.swift in Sources */,
 				DE702B921C1F20BE001C842D /* AppDelegate.swift in Sources */,
-				DEDAF2F01C24154E00A3FFB6 /* ChangeNSDateOrString.swift in Sources */,
+				DEDAF2F01C24154E00A3FFB6 /* ChangeDateOrString.swift in Sources */,
 				DEDAF2DA1C22849E00A3FFB6 /* GraphStatus.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

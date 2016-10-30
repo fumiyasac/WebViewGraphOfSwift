@@ -132,7 +132,7 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
         self.hideDatePicker()
         
         //YYYY/MM/DDの状態に整形してテキストフィールドへ表示
-        let dateString: String = ChangeNSDateOrString.convertNSDateToString(self.datepickerArea.date)
+        let dateString: String = ChangeDateOrString.convertDateToString(self.datepickerArea.date)
         self.eatDateField.text = dateString
         
         //ハイライトやボタン状態を元に戻す
@@ -288,7 +288,7 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
             calorieObject.amount = Int(self.calorieAmount)!
             
             //String（yyyy/MM/dd）をNSDate型に変換
-            let calorieDate: Date = ChangeNSDateOrString.convertStringToNSDate(self.eatDate)
+            let calorieDate: Date = ChangeDateOrString.convertStringToDate(self.eatDate)
             calorieObject.eatDate = calorieDate
             
             //登録処理

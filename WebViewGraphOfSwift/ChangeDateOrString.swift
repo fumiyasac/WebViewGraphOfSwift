@@ -1,5 +1,5 @@
 //
-//  ChangeNSDateOrString.swift
+//  ChangeDateOrString.swift
 //  WebViewGraphOfSwift
 //
 //  Created by 酒井文也 on 2015/12/18.
@@ -8,11 +8,11 @@
 
 import UIKit
 
-//日付をNSDateまたはStringの相互変換用のstruct
-struct ChangeNSDateOrString {
+//日付をDateまたはStringの相互変換用のstruct
+struct ChangeDateOrString {
     
     //NSDate → Stringへの変換
-    static func convertNSDateToString (_ date: Date) -> String {
+    static func convertDateToString (_ date: Date) -> String {
         
         let dateFormatter: DateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ja_JP")
@@ -22,7 +22,7 @@ struct ChangeNSDateOrString {
     }
 
     //String → NSDateへの変換
-    static func convertStringToNSDate (_ dateString: String!) -> Date {
+    static func convertStringToDate (_ dateString: String!) -> Date {
         
         if dateString != nil {
             let dateFormatter: DateFormatter = DateFormatter()

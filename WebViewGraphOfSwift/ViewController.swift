@@ -155,7 +155,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell!.calorieValue.text = String(calorieData.amount) + "kcal"
         
         //NSDate型は文字列に変換
-        let eatDateString: String = ChangeNSDateOrString.convertNSDateToString(calorieData.eatDate)
+        let eatDateString: String = ChangeDateOrString.convertDateToString(calorieData.eatDate)
         cell!.calorieDate.text = eatDateString
         
         //画像を表示させる
