@@ -37,7 +37,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet var recordTableView: UITableView!
     
     override func viewWillAppear(_ animated: Bool) {
-        self.fetchAndReloadData()
+        fetchAndReloadData()
     }
     
     override func viewDidLoad() {
@@ -51,15 +51,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
          * 3. User Interaction Enabledのチェックをはずす
          * 4. Clears Graphics Contextのチェックをはずす
          */
-        self.grachWebView.delegate = self
+        grachWebView.delegate = self
         
         //TableViewのデリゲート設定
-        self.recordTableView.delegate = self
-        self.recordTableView.dataSource = self
+        recordTableView.delegate = self
+        recordTableView.dataSource = self
         
         //Xibのクラスを読み込む宣言を行う
         let nibDefault:UINib = UINib(nibName: "CalorieDataCell", bundle: nil)
-        self.recordTableView.register(nibDefault, forCellReuseIdentifier: "CalorieDataCell")
+        recordTableView.register(nibDefault, forCellReuseIdentifier: "CalorieDataCell")
         
     }
     
@@ -68,47 +68,47 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //カロリーデータをフェッチしてTableViewへの一覧表示用のデータを作成
         //※折れ線グラフでも使う
-        self.caloriesArrayForCell.removeAllObjects()
+        caloriesArrayForCell.removeAllObjects()
         let calories = Calorie.fetchAllCalorieListSortByDate()
         
-        self.cellCount = calories.count
+        cellCount = calories.count
         
-        if self.cellCount != 0 {
+        if cellCount != 0 {
             for calorie in calories {
-                self.caloriesArrayForCell.add(calorie)
+                caloriesArrayForCell.add(calorie)
             }
         }
         
         //棒グラフ用の可変配列の作成
-        self.caloriesArrayForBarChart.removeAllObjects()
+        caloriesArrayForBarChart.removeAllObjects()
         let caloriesForBarChart = Calorie.fetchAllCalorieListSortByAmount()
         if caloriesForBarChart.count != 0 {
             for calorieForBarChart in caloriesForBarChart {
-                self.caloriesArrayForBarChart.add(calorieForBarChart)
+                caloriesArrayForBarChart.add(calorieForBarChart)
             }
         }
         
         //テーブルビューをリロード
-        self.reloadData()
+        reloadData()
         
         //セグメントコントロール位置の初期設定
-        self.selectGraphSegment.selectedSegmentIndex = 0
+        selectGraphSegment.selectedSegmentIndex = 0
         
         //グラフの初期状態を設定する
-        self.selectedGraph = GraphStatus.barGraph
+        selectedGraph = GraphStatus.barGraph
         
         //ローカルhtmlを読み込む
-        self.loadLocalHtmlSource(self.selectedGraph)
+        loadLocalHtmlSource(selectedGraph)
     }
     
     //TableView: テーブルの要素数を設定する
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.sectionCount
+        return sectionCount
     }
     
     //TableView: テーブルのセクションのセル数を設定する
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.cellCount
+        return cellCount
     }
     
     //TableView: Editableの状態にする.
@@ -180,12 +180,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //TableView: テーブルビューをリロードする
     func reloadData(){
-        self.recordTableView.reloadData()
+        recordTableView.reloadData()
     }
     
     //WebView: ローカルのHTMLファイルのロードが完了したら実行される
     func webViewDidFinishLoad(_ webView: UIWebView) {
-        self.displayGraphBase(self.selectedGraph)
+        displayGraphBase(selectedGraph)
     }
     
     //ローカルのhtmlファイルを読み込む
@@ -210,8 +210,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             
             let htmlFile = try String(contentsOfFile: path, encoding: String.Encoding.utf8)
-            self.grachWebView.loadHTMLString(htmlFile, baseURL: URL(fileURLWithPath: Bundle.main.bundlePath))
-            self.grachWebView.scalesPageToFit = false
+            grachWebView.loadHTMLString(htmlFile, baseURL: URL(fileURLWithPath: Bundle.main.bundlePath))
+            grachWebView.scalesPageToFit = false
             
         } catch _ as NSError {
             
@@ -240,36 +240,36 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //棒グラフ用のデータを作成してWebViewへ描画（実装汚くてすみません...）
     func displayBarGraphToWebView() {
         
-        if self.caloriesArrayForBarChart.count > 0 {
+        if caloriesArrayForBarChart.count > 0 {
             
             //棒グラフ用の文字列を生成する
             var initBarChart: String
             
-            if self.caloriesArrayForBarChart.count == 1 {
+            if caloriesArrayForBarChart.count == 1 {
                 
-                let first: Calorie = self.caloriesArrayForBarChart[0] as! Calorie
+                let first: Calorie = caloriesArrayForBarChart[0] as! Calorie
                 
                 initBarChart = NSString(format:"drawBarChart(['%@','%@','%@'],[%@,%@,%@]);", first.food, "なし", "なし", String(first.amount), "0", "0") as String
                 
             } else if self.caloriesArrayForBarChart.count == 2 {
 
-                let first: Calorie = self.caloriesArrayForBarChart[0] as! Calorie
-                let second: Calorie = self.caloriesArrayForBarChart[1] as! Calorie
+                let first: Calorie = caloriesArrayForBarChart[0] as! Calorie
+                let second: Calorie = caloriesArrayForBarChart[1] as! Calorie
                 
                 initBarChart = NSString(format:"drawBarChart(['%@','%@','%@'],[%@,%@,%@]);", first.food, second.food, "なし", String(first.amount), String(second.amount), "0") as String
                 
             } else {
                 
-                let first: Calorie = self.caloriesArrayForBarChart[0] as! Calorie
-                let second: Calorie = self.caloriesArrayForBarChart[1] as! Calorie
-                let third: Calorie = self.caloriesArrayForBarChart[2] as! Calorie
+                let first: Calorie = caloriesArrayForBarChart[0] as! Calorie
+                let second: Calorie = caloriesArrayForBarChart[1] as! Calorie
+                let third: Calorie = caloriesArrayForBarChart[2] as! Calorie
 
                 initBarChart = NSString(format:"drawBarChart(['%@','%@','%@'],[%@,%@,%@]);", first.food, second.food, third.food, String(first.amount), String(second.amount), String(third.amount)) as String
                 
             }
             
             //ローカルWebviewのJavaScriptのメソッドをキックする
-            self.grachWebView.stringByEvaluatingJavaScript(from: initBarChart)
+            grachWebView.stringByEvaluatingJavaScript(from: initBarChart)
             
         }
 
@@ -279,36 +279,36 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func displayLineGraphToWebView() {
         
         //TableViewに表示しているデータをそのまま使う
-        if self.caloriesArrayForCell.count > 0 {
+        if caloriesArrayForCell.count > 0 {
             
             //折れ線グラフ用の文字列を生成する
             var initLineChart: String
             
-            if self.caloriesArrayForCell.count == 1 {
+            if caloriesArrayForCell.count == 1 {
                 
-                let first: Calorie = self.caloriesArrayForCell[0] as! Calorie
+                let first: Calorie = caloriesArrayForCell[0] as! Calorie
                 
                 initLineChart = NSString(format:"drawLineChart(['%@','%@','%@'],[%@,%@,%@]);", first.food, "なし", "なし", String(first.amount), "0", "0") as String
                 
             } else if self.caloriesArrayForCell.count == 2 {
                 
-                let first: Calorie = self.caloriesArrayForCell[0] as! Calorie
-                let second: Calorie = self.caloriesArrayForCell[1] as! Calorie
+                let first: Calorie = caloriesArrayForCell[0] as! Calorie
+                let second: Calorie = caloriesArrayForCell[1] as! Calorie
                 
                 initLineChart = NSString(format:"drawLineChart(['%@','%@','%@'],[%@,%@,%@]);", first.food, second.food, "なし", String(first.amount), String(second.amount), "0") as String
                 
             } else {
                 
-                let first: Calorie = self.caloriesArrayForCell[0] as! Calorie
-                let second: Calorie = self.caloriesArrayForCell[1] as! Calorie
-                let third: Calorie = self.caloriesArrayForCell[2] as! Calorie
+                let first: Calorie = caloriesArrayForCell[0] as! Calorie
+                let second: Calorie = caloriesArrayForCell[1] as! Calorie
+                let third: Calorie = caloriesArrayForCell[2] as! Calorie
                 
                 initLineChart = NSString(format:"drawLineChart(['%@','%@','%@'],[%@,%@,%@]);", first.food, second.food, third.food, String(first.amount), String(second.amount), String(third.amount)) as String
                 
             }
             
             //ローカルWebviewのJavaScriptのメソッドをキックする
-            self.grachWebView.stringByEvaluatingJavaScript(from: initLineChart)
+            grachWebView.stringByEvaluatingJavaScript(from: initLineChart)
             
         }
         
@@ -320,18 +320,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         switch (sender.selectedSegmentIndex) {
         
             case GraphStatus.barGraph.returnValue():
-                self.selectedGraph = GraphStatus.barGraph
-                self.loadLocalHtmlSource(self.selectedGraph)
+                selectedGraph = GraphStatus.barGraph
+                loadLocalHtmlSource(selectedGraph)
                 break
             
             case GraphStatus.lineGraph.returnValue():
-                self.selectedGraph = GraphStatus.lineGraph
-                self.loadLocalHtmlSource(self.selectedGraph)
+                selectedGraph = GraphStatus.lineGraph
+                loadLocalHtmlSource(selectedGraph)
                 break
             
             default:
-                self.selectedGraph = GraphStatus.barGraph
-                self.loadLocalHtmlSource(self.selectedGraph)
+                selectedGraph = GraphStatus.barGraph
+                loadLocalHtmlSource(selectedGraph)
                 break
         }
         

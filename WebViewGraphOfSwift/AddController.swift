@@ -36,59 +36,59 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
         super.viewDidLoad()
         
         //画像の描画モードの指定
-        self.foodPicture.contentMode = UIViewContentMode.scaleToFill
-        self.selectedImage = UIImage(named: "noimage.png")
-        self.foodPicture.image = self.selectedImage
+        foodPicture.contentMode = UIViewContentMode.scaleToFill
+        selectedImage = UIImage(named: "noimage.png")
+        foodPicture.image = selectedImage
         
         //UITextFieldのプレースホルダーを設定
-        self.foodNameField.placeholder = "(例）てんぷらそば"
-        self.calorieAmountField.placeholder = "(例）730"
-        self.eatDateField.placeholder = "(例）2015/12/22"
+        foodNameField.placeholder = "(例）てんぷらそば"
+        calorieAmountField.placeholder = "(例）730"
+        eatDateField.placeholder = "(例）2015/12/22"
         
         //UITextFieldを識別するためのタグ
-        self.foodNameField.tag = TextFieldIdentifier.inputFood.returnValue()
-        self.calorieAmountField.tag = TextFieldIdentifier.inputCalorie.returnValue()
-        self.eatDateField.tag = TextFieldIdentifier.inputDate.returnValue()
+        foodNameField.tag = TextFieldIdentifier.inputFood.returnValue()
+        calorieAmountField.tag = TextFieldIdentifier.inputCalorie.returnValue()
+        eatDateField.tag = TextFieldIdentifier.inputDate.returnValue()
         
         //UITextFieldのその他設定
-        self.calorieAmountField.keyboardType = UIKeyboardType.numberPad
-        self.foodNameField.delegate = self
-        self.calorieAmountField.delegate = self
-        self.eatDateField.delegate = self
-        self.hideDatePicker()
+        calorieAmountField.keyboardType = UIKeyboardType.numberPad
+        foodNameField.delegate = self
+        calorieAmountField.delegate = self
+        eatDateField.delegate = self
+        hideDatePicker()
     }
 
     //デイトピッカーを表示する
     func showDatePicker() {
-        self.datepickerBackground.alpha = 1
-        self.datepickerButton.alpha = 1
-        self.datepickerButton.isEnabled = true
-        self.datepickerArea.alpha = 1
-        self.datepickerArea.isEnabled = true
+        datepickerBackground.alpha = 1
+        datepickerButton.alpha = 1
+        datepickerButton.isEnabled = true
+        datepickerArea.alpha = 1
+        datepickerArea.isEnabled = true
     }
     
     //デイトピッカーを非表示にする
     func hideDatePicker() {
-        self.datepickerBackground.alpha = 0
-        self.datepickerButton.alpha = 0
-        self.datepickerButton.isEnabled = false
-        self.datepickerArea.alpha = 0
-        self.datepickerArea.isEnabled = false
+        datepickerBackground.alpha = 0
+        datepickerButton.alpha = 0
+        datepickerButton.isEnabled = false
+        datepickerArea.alpha = 0
+        datepickerArea.isEnabled = false
     }
     
     //※ボタンアクションだとキーボードが重なってしまうのでUITextFieldDelegateを使う
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
 
         //カメラボタンを無効にする
-        self.foodPictureBtn.isEnabled = false
+        foodPictureBtn.isEnabled = false
         
         //「食べた日にち」のテキストフィールドタップ時のアクションのテキストフィールドがタップされた際はデイトピッカーを表示する
         if textField.tag == TextFieldIdentifier.inputDate.returnValue() {
 
-            self.foodNameField.isEnabled = false
-            self.calorieAmountField.isEnabled = false
-            self.eatDateField.isEnabled = true
-            self.showDatePicker()
+            foodNameField.isEnabled = false
+            calorieAmountField.isEnabled = false
+            eatDateField.isEnabled = true
+            showDatePicker()
             return false
             
         } else {
@@ -96,18 +96,18 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
             //「今食べたもの」のテキストフィールドタップ時のアクション
             if textField.tag == TextFieldIdentifier.inputCalorie.returnValue() {
                 
-                self.foodNameField.isEnabled = false
-                self.calorieAmountField.isEnabled = true
-                self.eatDateField.isEnabled = false
-                self.hideDatePicker()
+                foodNameField.isEnabled = false
+                calorieAmountField.isEnabled = true
+                eatDateField.isEnabled = false
+                hideDatePicker()
             
             //「推定カロリー」のテキストフィールドタップ時のアクション
             } else if textField.tag == TextFieldIdentifier.inputFood.returnValue() {
                 
-                self.foodNameField.isEnabled = true
-                self.calorieAmountField.isEnabled = false
-                self.eatDateField.isEnabled = false
-                self.hideDatePicker()
+                foodNameField.isEnabled = true
+                calorieAmountField.isEnabled = false
+                eatDateField.isEnabled = false
+                hideDatePicker()
             }
             return true
         }
@@ -119,34 +119,34 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
         
         //表示キーワード・デイトピッカーを隠す
         self.view.endEditing(true)
-        self.hideDatePicker()
+        hideDatePicker()
         
         //ハイライトやボタン状態を元に戻す
-        self.resetTextFieldStatus()
+        resetTextFieldStatus()
     }
     
     //デイトピッカーのボタンを押した際のアクション
     @IBAction func inputDatepickerAction(_ sender: UIButton) {
         
         //デイトピッカーを隠す
-        self.hideDatePicker()
+        hideDatePicker()
         
         //YYYY/MM/DDの状態に整形してテキストフィールドへ表示
         let dateString: String = ChangeDateOrString.convertDateToString(self.datepickerArea.date)
-        self.eatDateField.text = dateString
+        eatDateField.text = dateString
         
         //ハイライトやボタン状態を元に戻す
-        self.resetTextFieldStatus()
+        resetTextFieldStatus()
     }
     
     //テキストフィールド等を元の状態に戻す
     func resetTextFieldStatus() {
 
         //非活性状態の解除
-        self.foodNameField.isEnabled = true
-        self.calorieAmountField.isEnabled = true
-        self.eatDateField.isEnabled = true
-        self.foodPictureBtn.isEnabled = true
+        foodNameField.isEnabled = true
+        calorieAmountField.isEnabled = true
+        eatDateField.isEnabled = true
+        foodPictureBtn.isEnabled = true
         
     }
     
@@ -253,15 +253,15 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
     @IBAction func saveCalorieDataAction(_ sender: UIButton) {
         
         //UIImageデータを取得する
-        self.selectedImage = self.foodPicture.image
+        selectedImage = foodPicture.image
         
         //バリデーションを通す前の準備
-        self.foodName = self.foodNameField.text
-        self.calorieAmount = self.calorieAmountField.text
-        self.eatDate = self.eatDateField.text
+        foodName = foodNameField.text
+        calorieAmount = calorieAmountField.text
+        eatDate = eatDateField.text
         
         //Error:UIAlertControllerでエラーメッセージ表示
-        if (self.foodName.isEmpty || self.calorieAmount.isEmpty || self.eatDate.isEmpty) {
+        if (foodName.isEmpty || calorieAmount.isEmpty || eatDate.isEmpty) {
             
             //エラーのアラートを表示してOKを押すと戻る
             let errorAlert = UIAlertController(
@@ -283,22 +283,22 @@ class AddController: UIViewController, UITextFieldDelegate, UIImagePickerControl
             
             //Realmにデータを1件登録する
             let calorieObject = Calorie.create()
-            calorieObject.food = self.foodName
-            calorieObject.image = self.selectedImage
-            calorieObject.amount = Int(self.calorieAmount)!
+            calorieObject.food = foodName
+            calorieObject.image = selectedImage
+            calorieObject.amount = Int(calorieAmount)!
             
             //String（yyyy/MM/dd）をNSDate型に変換
-            let calorieDate: Date = ChangeDateOrString.convertStringToDate(self.eatDate)
+            let calorieDate: Date = ChangeDateOrString.convertStringToDate(eatDate)
             calorieObject.eatDate = calorieDate
             
             //登録処理
             calorieObject.save()
             
             //全ボタン非活性
-            self.foodNameField.isEnabled = false
-            self.calorieAmountField.isEnabled = false
-            self.eatDateField.isEnabled = false
-            self.foodPictureBtn.isEnabled = false
+            foodNameField.isEnabled = false
+            calorieAmountField.isEnabled = false
+            eatDateField.isEnabled = false
+            foodPictureBtn.isEnabled = false
             
             //登録されたアラートを表示してOKを押すと戻る
             let errorAlert = UIAlertController(

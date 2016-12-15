@@ -297,7 +297,7 @@
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = S5BF5553KY;
 						LastSwiftMigration = 0800;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 					DE702BA11C1F20BE001C842D = {
 						CreatedOnToolsVersion = 7.2;
@@ -564,14 +564,15 @@
 			baseConfigurationReference = 3030E1A6DBDCABBF821ECFF0 /* Pods-WebViewGraphOfSwift.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = S5BF5553KY;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = WebViewGraphOfSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.just1factory.WebViewGraphOfSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "52d389ea-cad8-42bd-9d46-047338c5d9f4";
-				PROVISIONING_PROFILE_SPECIFIER = fumiyasac_ios_development;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -581,15 +582,15 @@
 			baseConfigurationReference = 0DB705AD1AD56278B60D11E9 /* Pods-WebViewGraphOfSwift.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				DEVELOPMENT_TEAM = S5BF5553KY;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = WebViewGraphOfSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.just1factory.WebViewGraphOfSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "11dff38f-1378-4e00-98ff-c59ed5f0447f";
-				PROVISIONING_PROFILE_SPECIFIER = "XC: net.just1factory.*";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
