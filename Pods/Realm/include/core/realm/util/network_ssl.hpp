@@ -66,6 +66,42 @@ namespace util {
 namespace network {
 namespace ssl {
 
+enum class Error {
+    certificate_rejected = 1,
+};
+
+const std::error_category& ssl_error_category();
+
+std::error_condition make_error_condition(Error value);
+
+} // namespace ssl
+} // namespace network
+} // namespace util
+} // namespace realm
+
+namespace std {
+
+template <>
+struct is_error_condition_enum<realm::util::network::ssl::Error>: public true_type {};
+
+} // namespace std
+
+namespace realm {
+namespace util {
+namespace network {
+namespace ssl {
+
+#if REALM_HAVE_OPENSSL
+
+const std::error_category& openssl_error_category();
+
+#elif REALM_HAVE_SECURE_TRANSPORT
+
+const std::error_category& secure_transport_error_category();
+
+#endif
+
+
 class ProtocolNotSupported;
 
 
@@ -87,6 +123,12 @@ public:
     /// `SSL_CTX_use_PrivateKey_file()`.
     void use_private_key_file(const std::string& path);
 
+    /// Calling use_default_verify() will make a client use the
+    /// device default certificates for server verification.
+    /// For OpenSSL, use_default_verify() corresponds to
+    /// SSL_CTX_set_default_verify_paths(SSL_CTX*);
+    void use_default_verify();
+
     /// The verify file is a PEM file containing trust
     /// certificates that the client will use to
     /// verify the server crtificate. If use_verify_file()
@@ -101,24 +143,13 @@ private:
     void ssl_destroy() noexcept;
     void ssl_use_certificate_chain_file(const std::string& path, std::error_code&);
     void ssl_use_private_key_file(const std::string& path, std::error_code&);
+    void ssl_use_default_verify(std::error_code&);
     void ssl_use_verify_file(const std::string& path, std::error_code&);
 
 #if REALM_HAVE_OPENSSL
-    class OpensslErrorCategory: public std::error_category {
-    public:
-        const char* name() const noexcept override final;
-        std::string message(int value) const override final;
-    };
-    static OpensslErrorCategory s_openssl_error_category;
-
     SSL_CTX* m_ssl_ctx = nullptr;
+
 #elif REALM_HAVE_SECURE_TRANSPORT
-    class SecureTransportErrorCategory: public std::error_category {
-    public:
-        const char* name() const noexcept override final;
-        std::string message(int value) const override final;
-    };
-    static SecureTransportErrorCategory s_secure_transport_error_category;
 
 #if REALM_HAVE_KEYCHAIN_APIS
     static util::CFPtr<CFArrayRef> load_pem_file(const std::string& path, SecKeychainRef, std::error_code&);
@@ -137,6 +168,7 @@ private:
 
     util::CFPtr<CFArrayRef> m_trust_anchors;
 #endif // REALM_HAVE_KEYCHAIN_APIS
+
 #endif
 
     friend class Stream;
@@ -150,9 +182,17 @@ private:
 /// until its completion handler starts executing.
 class Stream {
 public:
+    using port_type = util::network::Endpoint::port_type;
+    using SSLVerifyCallback = bool(const std::string& server_address,
+                                   port_type server_port,
+                                   const char* pem_data,
+                                   size_t pem_size,
+                                   int preverify_ok,
+                                   int depth);
+
     enum HandshakeType { client, server };
 
-    Stream(socket&, Context&, HandshakeType);
+    Stream(Socket&, Context&, HandshakeType);
     ~Stream() noexcept;
 
     /// \brief Set the certificate verification mode for this SSL stream.
@@ -182,15 +222,70 @@ public:
     /// set_check_host() is only useful if verify_mode is
     /// set to VerifyMode::peer.
     void set_check_host(std::string host_name);
+    const std::string& get_host_name();
+
+    /// get_server_port() and set_server_port() are getter and setter for
+    /// the server port. They are only used by the verify callback function
+    /// below.
+    port_type get_server_port();
+    void set_server_port(port_type server_port);
+
+    /// If use_verify_callback() is called, the SSL certificate chain of
+    /// the server is presented to callback, one certificate at a time.
+    /// The SSL connection is accepted if and only if callback returns true
+    /// for all certificates.
+    /// The signature of \param callback is
+    ///
+    /// bool(const std::string& server_address,
+    ///      port_type server_port,
+    ///      const char* pem_data,
+    ///      size_t pem_size,
+    ///      int preverify_ok,
+    ///      int depth);
+    //
+    /// server address and server_port is the address and port of the server
+    /// that a SSL connection is being established to.
+    /// pem_data is the certificate of length pem_size in
+    /// the PEM format. preverify_ok is OpenSSL's preverification of the
+    /// certificate. preverify_ok is either 0, or 1. If preverify_ok is 1,
+    /// OpenSSL has accepted the certificate and it will generally be safe
+    /// to trust that certificate. depth represents the position of the
+    /// certificate in the certificate chain sent by the server. depth = 0
+    /// represents the actual server certificate that should contain the
+    /// host name(server address) of the server. The highest depth is the
+    /// root certificate.
+    /// The callback function will receive the certificates starting from
+    /// the root certificate and moving down the chain until it reaches the
+    /// server's own certificate with a host name. The depth of the last
+    /// certificate is 0. The depth of the first certificate is chain
+    /// length - 1.
+    ///
+    /// The return value of the callback function decides whether the
+    /// client accepts the certificate. If the return value is false, the
+    /// processing of the certificate chain is interrupted and the SSL
+    /// connection is rejected. If the return value is true, the verification
+    /// process continues. If the callback function returns true for all
+    /// presented certificates including the depth == 0 certificate, the
+    /// SSL connection is accepted.
+    ///
+    /// A recommended way of using the callback function is to return true
+    /// if preverify_ok = 1 and depth > 0,
+    /// always check the host name if depth = 0,
+    /// and use an independent verification step if preverify_ok = 0.
+    ///
+    /// Another possible way of using the callback is to collect all the
+    /// certificates until depth = 0, and present the entire chain for
+    /// independent verification.
+    void use_verify_callback(std::function<SSLVerifyCallback>* callback);
 
     /// @{
     ///
     /// Read and write operations behave the same way as they do on \ref
-    /// network::socket, except that after cancellation of asynchronous
+    /// network::Socket, except that after cancellation of asynchronous
     /// operations (`lowest_layer().cancel()`), the stream may be left in a bad
     /// state (see below).
     ///
-    /// The handshake operation must complete sucessfully before any read,
+    /// The handshake operation must complete successfully before any read,
     /// write, or shutdown operations are performed.
     ///
     /// The shutdown operation sends the shutdown alert to the peer, and
@@ -198,7 +293,7 @@ public:
     /// underlying socket. It is an error if the shutdown operation is initiated
     /// while there are read or write operations in progress. No read or write
     /// operations are allowed to be initiated after the shutdown operation has
-    /// been initated. When the shutdown operation has completed, it is safe to
+    /// been initiated. When the shutdown operation has completed, it is safe to
     /// close the underlying socket (`lowest_layer().close()`).
     ///
     /// If a write operation is executing while, or is initiated after a close
@@ -221,28 +316,27 @@ public:
     /// destroy the stream object. Other stream objects are not affected.
 
     void handshake();
-    std::error_code handshake(std::error_code&) noexcept;
+    std::error_code handshake(std::error_code&);
 
     std::size_t read(char* buffer, std::size_t size);
-    std::size_t read(char* buffer, std::size_t size, std::error_code& ec) noexcept;
+    std::size_t read(char* buffer, std::size_t size, std::error_code& ec);
     std::size_t read(char* buffer, std::size_t size, ReadAheadBuffer&);
-    std::size_t read(char* buffer, std::size_t size, ReadAheadBuffer&,
-                     std::error_code& ec) noexcept;
+    std::size_t read(char* buffer, std::size_t size, ReadAheadBuffer&, std::error_code& ec);
     std::size_t read_until(char* buffer, std::size_t size, char delim, ReadAheadBuffer&);
     std::size_t read_until(char* buffer, std::size_t size, char delim, ReadAheadBuffer&,
-                           std::error_code& ec) noexcept;
+                           std::error_code& ec);
 
     std::size_t write(const char* data, std::size_t size);
-    std::size_t write(const char* data, std::size_t size, std::error_code& ec) noexcept;
+    std::size_t write(const char* data, std::size_t size, std::error_code& ec);
 
     std::size_t read_some(char* buffer, std::size_t size);
-    std::size_t read_some(char* buffer, std::size_t size, std::error_code&) noexcept;
+    std::size_t read_some(char* buffer, std::size_t size, std::error_code&);
 
     std::size_t write_some(const char* data, std::size_t size);
-    std::size_t write_some(const char* data, std::size_t size, std::error_code&) noexcept;
+    std::size_t write_some(const char* data, std::size_t size, std::error_code&);
 
     void shutdown();
-    std::error_code shutdown(std::error_code&) noexcept;
+    std::error_code shutdown(std::error_code&);
 
     template<class H> void async_handshake(H handler);
 
@@ -251,7 +345,7 @@ public:
     template<class H> void async_read_until(char* buffer, std::size_t size, char delim,
                                             ReadAheadBuffer&, H handler);
 
-    template<class H> void async_write(const char* data, size_t size, H handler);
+    template<class H> void async_write(const char* data, std::size_t size, H handler);
 
     template<class H> void async_read_some(char* buffer, std::size_t size, H handler);
 
@@ -262,38 +356,38 @@ public:
     /// @}
 
     /// Returns a reference to the underlying socket.
-    socket& lowest_layer() noexcept;
+    Socket& lowest_layer() noexcept;
 
 private:
-    using Want = io_service::Want;
-    using StreamOps = io_service::BasicStreamOps<Stream>;
+    using Want = Service::Want;
+    using StreamOps = Service::BasicStreamOps<Stream>;
 
     class HandshakeOperBase;
     template<class H> class HandshakeOper;
     class ShutdownOperBase;
     template<class H> class ShutdownOper;
 
-    using LendersHandshakeOperPtr =
-        std::unique_ptr<HandshakeOperBase, io_service::LendersOperDeleter>;
-    using LendersShutdownOperPtr =
-        std::unique_ptr<ShutdownOperBase, io_service::LendersOperDeleter>;
+    using LendersHandshakeOperPtr = std::unique_ptr<HandshakeOperBase, Service::LendersOperDeleter>;
+    using LendersShutdownOperPtr  = std::unique_ptr<ShutdownOperBase,  Service::LendersOperDeleter>;
 
-    socket& m_tcp_socket;
+    Socket& m_tcp_socket;
     Context& m_ssl_context;
     const HandshakeType m_handshake_type;
 
     // The host name that the certificate should be checked against.
+    // The host name is called server address in the certificate verify
+    // callback function.
     std::string m_host_name;
 
-    // For async_handshake(), async_read_some()
-    io_service::OwnersOperPtr m_read_oper;
+    // The port of the server which is used in the certificate verify
+    // callback function.
+    port_type m_server_port;
 
-    // For async_write_some(), async_shutdown()
-    io_service::OwnersOperPtr m_write_oper;
+    // The callback for certificate verification and an
+    // opaque argument that will be supplied to the callback.
+    std::function<SSLVerifyCallback>* m_ssl_verify_callback;
 
-    // See io_service::BasicStreamOps for details on these these 8 functions.
-    void do_init_read_sync(std::error_code&) noexcept;
-    void do_init_write_sync(std::error_code&) noexcept;
+    // See Service::BasicStreamOps for details on these these 6 functions.
     void do_init_read_async(std::error_code&, Want&) noexcept;
     void do_init_write_async(std::error_code&, Want&) noexcept;
     std::size_t do_read_some_sync(char* buffer, std::size_t size,
@@ -317,7 +411,7 @@ private:
     // nonblocking mode, it must keep setting `want` to something other than
     // `Want::nothing` until the alert has been sent. When the shutdown alert
     // has been sent, it is safe to shut down the sending side of the underlying
-    // socket. On failure, ssl_shutdown() must set `ec` to something differet
+    // socket. On failure, ssl_shutdown() must set `ec` to something different
     // than `std::error_code()` and return false. On success, it must set `ec`
     // to `std::error_code()`, and return true if a shutdown alert from the peer
     // has already been received, otherwise it must return false. When it sets
@@ -328,12 +422,14 @@ private:
     // completed) must wait for reception on the peers shutdown alert.
     //
     // Note: The semantics around the second invocation of shutdown is currently
-    // unused by the higer level API, because of a requirement of compatibility
+    // unused by the higher level API, because of a requirement of compatibility
     // with Apple's Secure Transport API.
     void ssl_init();
     void ssl_destroy() noexcept;
     void ssl_set_verify_mode(VerifyMode, std::error_code&);
     void ssl_set_check_host(std::string, std::error_code&);
+    void ssl_use_verify_callback(std::function<SSLVerifyCallback>* callback, std::error_code&);
+
     void ssl_handshake(std::error_code&, Want& want) noexcept;
     bool ssl_shutdown(std::error_code& ec, Want& want) noexcept;
     std::size_t ssl_read(char* buffer, std::size_t size,
@@ -346,6 +442,8 @@ private:
     static BioMethod s_bio_method;
     SSL* m_ssl = nullptr;
     std::error_code m_bio_error_code;
+
+    int m_ssl_index = -1;
 
     template<class Oper>
     std::size_t ssl_perform(Oper oper, std::error_code& ec, Want& want) noexcept;
@@ -362,8 +460,15 @@ private:
     static long bio_ctrl(BIO*, int, long, void*) noexcept;
     static int bio_create(BIO*) noexcept;
     static int bio_destroy(BIO*) noexcept;
-    static int verify_callback(int preverify_ok, X509_STORE_CTX *ctx) noexcept;
 
+    // verify_callback_using_hostname is used as an argument to OpenSSL's SSL_set_verify function.
+    // verify_callback_using_hostname verifies that the certificate is valid and contains
+    // m_host_name as a Common Name or Subject Alternative Name.
+    static int verify_callback_using_hostname(int preverify_ok, X509_STORE_CTX *ctx) noexcept;
+
+    // verify_callback_using_delegate() is also used as an argument to OpenSSL's set_verify_function.
+    // verify_callback_using_delegate() calls out to the user supplied verify callback.
+    static int verify_callback_using_delegate(int preverify_ok, X509_STORE_CTX *ctx) noexcept;
 #elif REALM_HAVE_SECURE_TRANSPORT
     util::CFPtr<SSLContextRef> m_ssl;
     VerifyMode m_verify_mode = VerifyMode::none;
@@ -374,8 +479,13 @@ private:
     };
     util::Optional<BlockingOperation> m_last_operation;
 
-    // Details of the underlying I/O error that lead to errSecIO being returned from a SecureTransport function.
+    // Details of the underlying I/O error that lead to errSecIO being returned
+    // from a SecureTransport function.
     std::error_code m_last_error;
+
+    // The number of bytes accepted by SSWrite() but not yet confirmed to be
+    // written to the underlying socket.
+    std::size_t m_num_partially_written_bytes = 0;
 
     template<class Oper>
     std::size_t ssl_perform(Oper oper, std::error_code& ec, Want& want) noexcept;
@@ -385,20 +495,18 @@ private:
     std::pair<OSStatus, std::size_t> do_ssl_read(char* buffer, std::size_t size) noexcept;
     std::pair<OSStatus, std::size_t> do_ssl_write(const char* data, std::size_t size) noexcept;
 
-    static OSStatus tcp_read(SSLConnectionRef, void*, size_t* length) noexcept;
-    static OSStatus tcp_write(SSLConnectionRef, const void*, size_t* length) noexcept;
+    static OSStatus tcp_read(SSLConnectionRef, void*, std::size_t* length) noexcept;
+    static OSStatus tcp_write(SSLConnectionRef, const void*, std::size_t* length) noexcept;
 
-    OSStatus tcp_read(void*, size_t* length) noexcept;
-    OSStatus tcp_write(const void*, size_t* length) noexcept;
+    OSStatus tcp_read(void*, std::size_t* length) noexcept;
+    OSStatus tcp_write(const void*, std::size_t* length) noexcept;
 
     OSStatus verify_peer() noexcept;
 #endif
 
-    friend class io_service::BasicStreamOps<Stream>;
+    friend class Service::BasicStreamOps<Stream>;
     friend class network::ReadAheadBuffer;
 };
-
-
 
 
 // Implementation
@@ -434,6 +542,14 @@ inline void Context::use_private_key_file(const std::string& path)
         throw std::system_error(ec);
 }
 
+inline void Context::use_default_verify()
+{
+    std::error_code ec;
+    ssl_use_default_verify(ec);
+    if (ec)
+        throw std::system_error(ec);
+}
+
 inline void Context::use_verify_file(const std::string& path)
 {
     std::error_code ec;
@@ -442,25 +558,21 @@ inline void Context::use_verify_file(const std::string& path)
         throw std::system_error(ec);
 }
 
-
-class Stream::HandshakeOperBase: public io_service::IoOper {
+class Stream::HandshakeOperBase: public Service::IoOper {
 public:
     HandshakeOperBase(std::size_t size, Stream& stream):
-        IoOper(size),
-        m_stream(&stream)
+        IoOper{size},
+        m_stream{&stream}
     {
     }
-    Want initiate() noexcept
+    Want initiate()
     {
-        REALM_ASSERT(this == m_stream->m_read_oper.get());
+        REALM_ASSERT(this == m_stream->m_tcp_socket.m_read_oper.get());
         REALM_ASSERT(!is_complete());
-        if (m_stream->lowest_layer().ensure_nonblocking_mode(m_error_code)) {
-            set_is_complete(true); // Failure
-            return Want::nothing;
-        }
-        return proceed();
+        m_stream->m_tcp_socket.m_desc.ensure_nonblocking_mode(); // Throws
+        return advance();
     }
-    Want proceed() noexcept override final
+    Want advance() noexcept override final
     {
         REALM_ASSERT(!is_complete());
         REALM_ASSERT(!is_canceled());
@@ -480,9 +592,9 @@ public:
     {
         m_stream = nullptr;
     }
-    socket_base& get_socket() noexcept
+    Service::Descriptor& descriptor() noexcept override final
     {
-        return m_stream->lowest_layer();
+        return m_stream->lowest_layer().m_desc;
     }
 protected:
     Stream* m_stream;
@@ -492,8 +604,8 @@ protected:
 template<class H> class Stream::HandshakeOper: public HandshakeOperBase {
 public:
     HandshakeOper(std::size_t size, Stream& stream, H handler):
-        HandshakeOperBase(size, stream),
-        m_handler(std::move(handler))
+        HandshakeOperBase{size, stream},
+        m_handler{std::move(handler)}
     {
     }
     void recycle_and_execute() override final
@@ -510,24 +622,21 @@ private:
     H m_handler;
 };
 
-class Stream::ShutdownOperBase: public io_service::IoOper {
+class Stream::ShutdownOperBase: public Service::IoOper {
 public:
     ShutdownOperBase(std::size_t size, Stream& stream):
-        IoOper(size),
-        m_stream(&stream)
+        IoOper{size},
+        m_stream{&stream}
     {
     }
-    Want initiate() noexcept
+    Want initiate()
     {
-        REALM_ASSERT(this == m_stream->m_write_oper.get());
+        REALM_ASSERT(this == m_stream->m_tcp_socket.m_write_oper.get());
         REALM_ASSERT(!is_complete());
-        if (m_stream->lowest_layer().ensure_nonblocking_mode(m_error_code)) {
-            set_is_complete(true); // Failure
-            return Want::nothing;
-        }
-        return proceed();
+        m_stream->m_tcp_socket.m_desc.ensure_nonblocking_mode(); // Throws
+        return advance();
     }
-    Want proceed() noexcept override final
+    Want advance() noexcept override final
     {
         REALM_ASSERT(!is_complete());
         REALM_ASSERT(!is_canceled());
@@ -548,9 +657,9 @@ public:
     {
         m_stream = nullptr;
     }
-    socket_base& get_socket() noexcept
+    Service::Descriptor& descriptor() noexcept override final
     {
-        return m_stream->lowest_layer();
+        return m_stream->lowest_layer().m_desc;
     }
 protected:
     Stream* m_stream;
@@ -560,8 +669,8 @@ protected:
 template<class H> class Stream::ShutdownOper: public ShutdownOperBase {
 public:
     ShutdownOper(std::size_t size, Stream& stream, H handler):
-        ShutdownOperBase(size, stream),
-        m_handler(std::move(handler))
+        ShutdownOperBase{size, stream},
+        m_handler{std::move(handler)}
     {
     }
     void recycle_and_execute() override final
@@ -578,31 +687,17 @@ private:
     H m_handler;
 };
 
-inline Stream::Stream(socket& socket, Context& context, HandshakeType type):
-    m_tcp_socket(socket),
-    m_ssl_context(context),
-    m_handshake_type(type)
+inline Stream::Stream(Socket& socket, Context& context, HandshakeType type):
+    m_tcp_socket{socket},
+    m_ssl_context{context},
+    m_handshake_type{type}
 {
     ssl_init(); // Throws
 }
 
 inline Stream::~Stream() noexcept
 {
-    bool any_incomplete = false;
-    if (m_read_oper && m_read_oper->is_uncanceled()) {
-        m_read_oper->cancel();
-        if (!m_read_oper->is_complete())
-            any_incomplete = true;
-    }
-    if (m_write_oper && m_write_oper->is_uncanceled()) {
-        m_write_oper->cancel();
-        if (!m_write_oper->is_complete())
-            any_incomplete = true;
-    }
-    if (any_incomplete) {
-        io_service& service = m_tcp_socket.get_io_service();
-        service.cancel_incomplete_io_ops(m_tcp_socket.get_sock_fd());
-    }
+    m_tcp_socket.cancel();
     ssl_destroy();
 }
 
@@ -616,121 +711,144 @@ inline void Stream::set_verify_mode(VerifyMode mode)
 
 inline void Stream::set_check_host(std::string host_name)
 {
+    m_host_name = host_name;
     std::error_code ec;
     ssl_set_check_host(host_name, ec);
     if (ec)
         throw std::system_error(ec);
 }
 
+inline const std::string& Stream::get_host_name()
+{
+    return m_host_name;
+}
+
+inline Stream::port_type Stream::get_server_port()
+{
+    return m_server_port;
+}
+
+inline void Stream::set_server_port(port_type server_port)
+{
+    m_server_port = server_port;
+}
+
+inline void Stream::use_verify_callback(std::function<SSLVerifyCallback>* callback)
+{
+    std::error_code ec;
+    ssl_use_verify_callback(callback, ec);
+    if (ec)
+        throw std::system_error(ec);
+}
 inline void Stream::handshake()
 {
     std::error_code ec;
-    if (handshake(ec))
+    if (handshake(ec)) // Throws
         throw std::system_error(ec);
 }
 
 inline std::size_t Stream::read(char* buffer, std::size_t size)
 {
     std::error_code ec;
-    read(buffer, size, ec);
+    read(buffer, size, ec); // Throws
     if (ec)
         throw std::system_error(ec);
     return size;
 }
 
-inline std::size_t Stream::read(char* buffer, std::size_t size, std::error_code& ec) noexcept
+inline std::size_t Stream::read(char* buffer, std::size_t size, std::error_code& ec)
 {
-    return StreamOps::read(*this, buffer, size, ec);
+    return StreamOps::read(*this, buffer, size, ec); // Throws
 }
 
 inline std::size_t Stream::read(char* buffer, std::size_t size, ReadAheadBuffer& rab)
 {
     std::error_code ec;
-    read(buffer, size, rab, ec);
+    read(buffer, size, rab, ec); // Throws
     if (ec)
         throw std::system_error(ec);
     return size;
 }
 
 inline std::size_t Stream::read(char* buffer, std::size_t size, ReadAheadBuffer& rab,
-                                std::error_code& ec) noexcept
+                                std::error_code& ec)
 {
     int delim = std::char_traits<char>::eof();
-    return StreamOps::buffered_read(*this, buffer, size, delim, rab, ec);
+    return StreamOps::buffered_read(*this, buffer, size, delim, rab, ec); // Throws
 }
 
 inline std::size_t Stream::read_until(char* buffer, std::size_t size, char delim,
                                       ReadAheadBuffer& rab)
 {
     std::error_code ec;
-    std::size_t n = read_until(buffer, size, delim, rab, ec);
+    std::size_t n = read_until(buffer, size, delim, rab, ec); // Throws
     if (ec)
         throw std::system_error(ec);
     return n;
 }
 
 inline std::size_t Stream::read_until(char* buffer, std::size_t size, char delim,
-                                      ReadAheadBuffer& rab, std::error_code& ec) noexcept
+                                      ReadAheadBuffer& rab, std::error_code& ec)
 {
     int delim_2 = std::char_traits<char>::to_int_type(delim);
-    return StreamOps::buffered_read(*this, buffer, size, delim_2, rab, ec);
+    return StreamOps::buffered_read(*this, buffer, size, delim_2, rab, ec); // Throws
 }
 
 inline std::size_t Stream::write(const char* data, std::size_t size)
 {
     std::error_code ec;
-    write(data, size, ec);
+    write(data, size, ec); // Throws
     if (ec)
         throw std::system_error(ec);
     return size;
 }
 
-inline std::size_t Stream::write(const char* data, std::size_t size, std::error_code& ec) noexcept
+inline std::size_t Stream::write(const char* data, std::size_t size, std::error_code& ec)
 {
-    return StreamOps::write(*this, data, size, ec);
+    return StreamOps::write(*this, data, size, ec); // Throws
 }
 
 inline std::size_t Stream::read_some(char* buffer, std::size_t size)
 {
     std::error_code ec;
-    std::size_t n = read_some(buffer, size, ec);
+    std::size_t n = read_some(buffer, size, ec); // Throws
     if (ec)
         throw std::system_error(ec);
     return n;
 }
 
-inline std::size_t Stream::read_some(char* buffer, std::size_t size, std::error_code& ec) noexcept
+inline std::size_t Stream::read_some(char* buffer, std::size_t size, std::error_code& ec)
 {
-    return StreamOps::read_some(*this, buffer, size, ec);
+    return StreamOps::read_some(*this, buffer, size, ec); // Throws
 }
 
 inline std::size_t Stream::write_some(const char* data, std::size_t size)
 {
     std::error_code ec;
-    std::size_t n = write_some(data, size, ec);
+    std::size_t n = write_some(data, size, ec); // Throws
     if (ec)
         throw std::system_error(ec);
     return n;
 }
 
-inline std::size_t Stream::write_some(const char* data, std::size_t size,
-                                      std::error_code& ec) noexcept
+inline std::size_t Stream::write_some(const char* data, std::size_t size, std::error_code& ec)
 {
-    return StreamOps::write_some(*this, data, size, ec);
+    return StreamOps::write_some(*this, data, size, ec); // Throws
 }
 
 inline void Stream::shutdown()
 {
     std::error_code ec;
-    if (shutdown(ec))
+    if (shutdown(ec)) // Throws
         throw std::system_error(ec);
 }
 
 template<class H> inline void Stream::async_handshake(H handler)
 {
     LendersHandshakeOperPtr op =
-        io_service::alloc<HandshakeOper<H>>(m_read_oper, *this, std::move(handler)); // Throws
-    io_service::initiate_io_oper(std::move(op)); // Throws
+        Service::alloc<HandshakeOper<H>>(m_tcp_socket.m_read_oper, *this,
+                                         std::move(handler)); // Throws
+    m_tcp_socket.m_desc.initiate_oper(std::move(op)); // Throws
 }
 
 template<class H> inline void Stream::async_read(char* buffer, std::size_t size, H handler)
@@ -775,29 +893,18 @@ template<class H> inline void Stream::async_write_some(const char* data, std::si
 template<class H> inline void Stream::async_shutdown(H handler)
 {
     LendersShutdownOperPtr op =
-        io_service::alloc<ShutdownOper<H>>(m_write_oper, *this, std::move(handler)); // Throws
-    io_service::initiate_io_oper(std::move(op)); // Throws
+        Service::alloc<ShutdownOper<H>>(m_tcp_socket.m_write_oper, *this,
+                                        std::move(handler)); // Throws
+    m_tcp_socket.m_desc.initiate_oper(std::move(op)); // Throws
 }
 
-inline void Stream::do_init_read_sync(std::error_code& ec) noexcept
+inline void Stream::do_init_read_async(std::error_code&, Want& want) noexcept
 {
-    lowest_layer().ensure_blocking_mode(ec);
-}
-
-inline void Stream::do_init_write_sync(std::error_code& ec) noexcept
-{
-    lowest_layer().ensure_blocking_mode(ec);
-}
-
-inline void Stream::do_init_read_async(std::error_code& ec, Want& want) noexcept
-{
-    lowest_layer().ensure_nonblocking_mode(ec);
     want = Want::nothing; // Proceed immediately unless there is an error
 }
 
-inline void Stream::do_init_write_async(std::error_code& ec, Want& want) noexcept
+inline void Stream::do_init_write_async(std::error_code&, Want& want) noexcept
 {
-    lowest_layer().ensure_nonblocking_mode(ec);
     want = Want::nothing; // Proceed immediately unless there is an error
 }
 
@@ -833,7 +940,7 @@ inline std::size_t Stream::do_write_some_async(const char* data, std::size_t siz
     return ssl_write(data, size, ec, want);
 }
 
-inline socket& Stream::lowest_layer() noexcept
+inline Socket& Stream::lowest_layer() noexcept
 {
     return m_tcp_socket;
 }
@@ -947,7 +1054,10 @@ inline bool Stream::ssl_shutdown(std::error_code& ec, Want& want) noexcept
 //
 // First of all, if the operation remains incomplete (neither successfully
 // completed, nor failed), ssl_perform() will set `ec` to `std::system_error()`,
-// `want` to something other than `Want::nothing`, and return zero.
+// `want` to something other than `Want::nothing`, and return zero. Note that
+// read and write operations are partial in the sense that they do not need to
+// read or write everything before completing successfully. They only need to
+// read or write at least one byte to complete successfully.
 //
 // Such a situation will normally only happen when the underlying TCP socket is
 // in nonblocking mode, and the read/write requirements of the operation could
@@ -984,7 +1094,7 @@ std::size_t Stream::ssl_perform(Oper oper, std::error_code& ec, Want& want) noex
     int ssl_error = SSL_get_error(m_ssl, ret);
     int sys_error = int(ERR_get_error());
 
-    // Guaranteed by the documentstion of SSL_get_error()
+    // Guaranteed by the documentation of SSL_get_error()
     REALM_ASSERT((ret > 0) == (ssl_error == SSL_ERROR_NONE));
 
     REALM_ASSERT(!m_bio_error_code || ssl_error == SSL_ERROR_SYSCALL);
@@ -1058,14 +1168,14 @@ std::size_t Stream::ssl_perform(Oper oper, std::error_code& ec, Want& want) noex
                 // errno = 0(Undefined error) in the observed case.
                 // At the moment. we will report
                 // premature_end_of_input.
-                // If we see this error case occuring in other situations in
+                // If we see this error case occurring in other situations in
                 // the future, we will have to update this case.
                 ec = network::premature_end_of_input;
             }
             want = Want::nothing;
             return 0;
         case SSL_ERROR_SSL:
-            ec = std::error_code(sys_error, Context::s_openssl_error_category);
+            ec = std::error_code(sys_error, openssl_error_category());
             want = Want::nothing;
             return 0;
         default:
@@ -1124,7 +1234,7 @@ inline int Stream::do_ssl_shutdown() noexcept
 // If an error occurred, ssl_perform() will set `ec` to something other than
 // `std::system_error()`, `want` to `Want::nothing`, and return 0.
 //
-// If no error occured, and the operation completed (`!ec && want ==
+// If no error occurred, and the operation completed (`!ec && want ==
 // Want::nothing`), then the return value indicates the outcome of the
 // operation.
 //
@@ -1178,7 +1288,7 @@ std::size_t Stream::ssl_perform(Oper oper, std::error_code& ec, Want& want) noex
         return n;
     }
 
-    ec = std::error_code(result, Context::s_secure_transport_error_category);
+    ec = std::error_code(result, secure_transport_error_category());
     want = Want::nothing;
     return 0;
 }

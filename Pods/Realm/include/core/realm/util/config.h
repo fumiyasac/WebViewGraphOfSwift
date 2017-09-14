@@ -8,12 +8,12 @@
 
 #define REALM_VERSION               "unknown"
 
-#define REALM_INSTALL_PREFIX        "/Users/realm/workspace/core_osx/install"
-#define REALM_INSTALL_EXEC_PREFIX   "/Users/realm/workspace/core_osx/install"
-#define REALM_INSTALL_INCLUDEDIR    "/Users/realm/workspace/core_osx/install/include"
-#define REALM_INSTALL_BINDIR        "/Users/realm/workspace/core_osx/install/bin"
-#define REALM_INSTALL_LIBDIR        "/Users/realm/workspace/core_osx/install/lib"
-#define REALM_INSTALL_LIBEXECDIR    "/Users/realm/workspace/core_osx/install/libexec"
+#define REALM_INSTALL_PREFIX        "/Users/realm/workspace/m_realm-core_release_v2.8.6-TACCVQBSGHOUT7MO7V4FECJVQ6R2L5LUCEG2LZTNHXUHJ5LJ5MKQ/install"
+#define REALM_INSTALL_EXEC_PREFIX   "/Users/realm/workspace/m_realm-core_release_v2.8.6-TACCVQBSGHOUT7MO7V4FECJVQ6R2L5LUCEG2LZTNHXUHJ5LJ5MKQ/install"
+#define REALM_INSTALL_INCLUDEDIR    "/Users/realm/workspace/m_realm-core_release_v2.8.6-TACCVQBSGHOUT7MO7V4FECJVQ6R2L5LUCEG2LZTNHXUHJ5LJ5MKQ/install/include"
+#define REALM_INSTALL_BINDIR        "/Users/realm/workspace/m_realm-core_release_v2.8.6-TACCVQBSGHOUT7MO7V4FECJVQ6R2L5LUCEG2LZTNHXUHJ5LJ5MKQ/install/bin"
+#define REALM_INSTALL_LIBDIR        "/Users/realm/workspace/m_realm-core_release_v2.8.6-TACCVQBSGHOUT7MO7V4FECJVQ6R2L5LUCEG2LZTNHXUHJ5LJ5MKQ/install/lib"
+#define REALM_INSTALL_LIBEXECDIR    "/Users/realm/workspace/m_realm-core_release_v2.8.6-TACCVQBSGHOUT7MO7V4FECJVQ6R2L5LUCEG2LZTNHXUHJ5LJ5MKQ/install/libexec"
 
 #ifdef REALM_DEBUG
 #  define REALM_MAX_BPNODE_SIZE     1000
